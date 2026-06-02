@@ -15,7 +15,7 @@ const banners = ref([
     brand: "QYRON | A",
     title: "Энергия движения\nи восстановления",
     description: "Лимитированная серия массажных кресел",
-    image: "https://dl.bs365.uz/storage/sliders/236/LQ0NMAv4wxk2bzbK6qs4.jpg", // Подставь свою урлу
+    image: "https://dl.bs365.uz/storage/sliders/240/QTBUuR45gdxlnPPcIvDN.jpg", // Подставь свою урлу
     link: "/catalog/qyron-x",
   },
   {
