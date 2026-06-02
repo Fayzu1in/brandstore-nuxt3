@@ -23,7 +23,7 @@
 
       <div class="flex-shrink-0">
         <button
-          class="flex items-center gap-2 rounded-full border border-[#00a0e3] px-4 py-1.5 text-[14px] text-white hover:bg-[#00a0e3]/10 transition-colors cursor-pointer"
+          class="flex items-center gap-2 rounded-full border border-[#E30909] px-4 py-1.5 text-[14px] text-white hover:bg-[#00a0e3]/10 transition-colors cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@
             viewBox="0 0 24 24"
             stroke-width="2"
             stroke="currentColor"
-            class="w-4 h-4 text-[#00a0e3]"
+            class="w-4 h-4 text-[#E30909]"
           >
             <path
               stroke-linecap="round"

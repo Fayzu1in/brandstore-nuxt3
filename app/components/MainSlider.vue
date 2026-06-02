@@ -5,7 +5,12 @@
         class="relative w-full aspect-[21/9] md:aspect-[2.4/1] rounded-3xl overflow-hidden bg-[#1c2229]"
       >
         <swiper
-          :modules="[SwiperAutoplay, SwiperPagination, SwiperEffectFade]"
+          :modules="[
+            SwiperAutoplay,
+            SwiperPagination,
+            SwiperEffectFade,
+            SwiperMousewheel,
+          ]"
           :slides-per-view="1"
           :loop="true"
           :effect="'fade'"
@@ -13,6 +18,10 @@
           :pagination="{
             clickable: true,
             el: '.custom-pagination',
+          }"
+          :mousewheel="{
+            forceToAxis: true, // Реагирует только на горизонтальный скролл, не мешая вертикальному скроллу страницы
+            releaseOnEdges: true, // Отпускает страницу, если слайды закончились
           }"
           class="w-full h-full"
         >
@@ -74,6 +83,10 @@
 <script setup>
 // Импортируем компоненты и модули Swiper
 import { Swiper, SwiperSlide } from "swiper/vue";
+import {
+  Navigation as SwiperNavigation,
+  Mousewheel as SwiperMousewheel,
+} from "swiper/modules";
 import {
   Autoplay as SwiperAutoplay,
   Pagination as SwiperPagination,
