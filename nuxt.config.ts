@@ -7,6 +7,14 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/eslint',
     '@nuxt/icon',
-    '@nuxt/image'
-  ]
+    '@nuxt/image',
+    '@nuxtjs/tailwindcss'
+  ],
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: true, 
+    },
+  ],
+  css: ['~/assets/css/main.css'],
 })
