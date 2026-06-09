@@ -1,15 +1,19 @@
 <template>
   <div>
-    <MainSlider :slides-data="banners" v-if="banners" />
+    <MainSlider :slides-data="banners" class="-mt-[58px]" v-if="banners" />
     <div>
       <ProductSection
-        title="Персональные предложения"
+        title="Горящие предложения"
         :items="personalProducts"
         viewAllLink="/catalog/personal"
         carousel
       />
 
-      <ProductSection title="Успей купить" :items="hotProducts" />
+      <PopularCategories :categories="homeCategories" />
+      <ProductSection title="Новинки" :items="hotProducts" />
+      <ForyouSection :favs="homeCategories" />
+      <PromoBanner />
+      <BrandsSection />
     </div>
   </div>
 </template>
@@ -50,5 +54,67 @@ const personalProducts = ref([
 const hotProducts = ref([
   { id: 1, name: "Фен Dyson Supersonic", price: "55 000" },
   { id: 2, name: "Телевизор Samsung Neo QLED", price: "240 000" },
+]);
+const homeCategories = ref([
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/conditioners",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/tvs",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/laptops",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/refrigerators",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/washers",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/smartphones",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/audio",
+  },
+  {
+    name: "Телефоны и планшеты",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/coffee",
+  },
+  {
+    name: "Чайники",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/kettles",
+  },
+  {
+    name: "Пылесосы",
+    image:
+      "https://www.freeiconspng.com/uploads/smartphone-and-tablet-png-25.png",
+    link: "/catalog/vacuums",
+  },
 ]);
 </script>

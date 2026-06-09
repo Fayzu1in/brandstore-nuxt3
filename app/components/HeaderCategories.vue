@@ -1,12 +1,14 @@
 <template>
-  <nav class="w-full bg-[#000000] border-t border-[#1a1f25]">
+  <nav
+    class="w-full bg-black/40 backdrop-blur-md border-b border-white/5 z-30 transition-all duration-300"
+  >
     <div
       class="mx-auto flex h-[58px] max-w-[1481px] w-full items-center justify-between px-[25px]"
     >
       <div class="flex items-center gap-7">
         <NuxtLink
           to="/for-gamers"
-          class="relative py-4 text-[14px] font-medium text-[#E30909] transition-colors duration-200"
+          class="relative py-4 text-[14px] font-bold text-[#E30909] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#E30909] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
         >
           Для геймеров
         </NuxtLink>
@@ -23,7 +25,7 @@
 
       <div class="flex-shrink-0">
         <button
-          class="flex items-center gap-2 rounded-full border border-[#E30909] px-4 py-1.5 text-[14px] text-white hover:bg-[#00a0e3]/10 transition-colors cursor-pointer"
+          class="flex items-center gap-2 rounded-full border border-[#E30909] px-4 py-1.5 text-[14px] font-medium text-white hover:bg-[#E30909]/20 transition-colors cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +49,6 @@
 </template>
 
 <script setup>
-// Твой массив с новыми кнопками
 const menuItems = [
   { name: "Смартфоны и гаджеты", link: "/smartphones" },
   { name: "Компьютеры и ноутбуки", link: "/computers" },

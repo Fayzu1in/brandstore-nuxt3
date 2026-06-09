@@ -1,6 +1,8 @@
 <template>
   <!-- Внешняя обертка главного навбара -->
-  <section class="w-full bg-[#000000] text-white py-3">
+  <section
+    class="w-full bg-[#000000] text-white py-3 shadow-lg shadow-black/40"
+  >
     <!-- Основной контейнер, центрированный, с жестким ограничением ширины -->
     <div
       class="mx-auto flex max-w-[1481px] w-full items-center justify-between px-[25px] gap-6"

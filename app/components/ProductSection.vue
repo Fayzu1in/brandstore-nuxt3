@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full bg-[#000000] text-white py-8">
+  <section class="w-full text-white py-8">
     <div class="mx-auto max-w-[1481px] w-full px-[25px]">
       <div class="flex items-end justify-between mb-6">
         <h2
