@@ -1,5 +1,6 @@
 <template>
-  <div
+  <NuxtLink
+    :to="`/productPage/${product.slug}`"
     class="bg-[#FFFF] rounded-2xl p-4 flex flex-col justify-between min-h-[380px] group transition-all duration-300 hover:shadow-lg hover:shadow-black/30 cursor-pointer"
   >
     <div>
@@ -50,7 +51,7 @@
         🛒
       </button>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup>
