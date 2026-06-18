@@ -1,11 +1,14 @@
 <template>
-  <header
-    class="absolute top-0 left-0 w-full h-px bg-transparent z-40 overflow-visible flex flex-col"
-  >
-    <HeaderTop />
+  <header class="absolute top-0 left-0 w-full z-40 pointer-events-none">
+    <div class="pointer-events-auto">
+      <HeaderTop />
+    </div>
 
-    <HeaderMain class="sticky top-0 z-50" />
+    <HeaderMain />
+    <!-- fixed внутри -->
 
-    <HeaderCategories />
+    <div class="pointer-events-auto">
+      <HeaderCategories />
+    </div>
   </header>
 </template>

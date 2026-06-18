@@ -32,19 +32,18 @@
       <!-- Правая часть -->
       <div class="flex items-center gap-5">
         <div class="flex gap-5">
-          <a
+          <!-- <a
             href="tel:88001005586"
             class="text-[#a0a5ab] hover:text-white transition-colors"
           >
             <span class="text-[#6c727a] mr-1">Служба поддержки</span>8 (800)
             100-55-86
-          </a>
+          </a> -->
           <a
-            href="tel:88001008899"
+            href="tel:998712059393"
             class="text-[#a0a5ab] hover:text-white transition-colors"
           >
-            <span class="text-[#6c727a] mr-1">Оформить заказ</span>8 (800)
-            100-88-99
+            <span class="text-[#6c727a] mr-1">Оформить заказ</span>71-205-93-93
           </a>
         </div>
 

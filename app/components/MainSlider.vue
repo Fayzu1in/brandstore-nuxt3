@@ -28,7 +28,7 @@
           class="relative w-full h-full overflow-hidden"
         >
           <img
-            :src="slide.image"
+            :src="slide.background?.url"
             :alt="slide.title"
             class="absolute inset-0 w-full h-full object-cover object-center"
           />
