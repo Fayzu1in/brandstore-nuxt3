@@ -34,6 +34,7 @@ const { data: recommendedRaw } = await useAsyncData("recommended", () =>
 
 const banners = computed(() => bannersRaw.value?.data ?? []);
 const categories = computed(() => categoriesRaw.value?.data ?? []);
+console.log("categ", categories);
 // const hotProducts = computed(() => hotProductsRaw.value?.data ?? []);
 const recommendedProducts = computed(
   () => recommendedRaw.value?.data.product_request ?? [],

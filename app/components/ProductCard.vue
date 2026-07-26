@@ -27,7 +27,7 @@
       </div>
 
       <h4
-        class="text-[14px] font-medium mb-3 text-black text-center leading-tight h-10 line-clamp-2 group-hover:text-[#E30909] transition-colors"
+        class="text-[14px] font-medium mb-3 text-[#13181e] text-center leading-tight h-9 line-clamp-2 group-hover:text-[#E30909] transition-colors"
       >
         {{ product.model || "Название товара" }}
       </h4>
@@ -42,14 +42,29 @@
     </div>
 
     <div class="flex items-center justify-between mt-4 pt-3 border-gray-800">
-      <div class="text-[18px] font-bold text-black">
+      <div class="text-[14px] font-bold text-black">
         {{ product.random_shop?.price || "0" }} сум
       </div>
-      <button
-        class="w-9 h-9 flex items-center justify-center bg-[#E30909] text-white rounded-full hover:bg-[#c20808] transition-colors cursor-pointer"
-      >
-        🛒
-      </button>
+      <div class="flex gap-2">
+        <button
+          class="w-8 h-8 flex items-center justify-center border-[1px] bg-[#fff] text-[grey] rounded-full hover:bg-[#E30909] hover:text-white transition-colors cursor-pointer"
+        >
+          <Icon
+            name="mdi:align-horizontal-right"
+            class="text-l transition-transform"
+          />
+        </button>
+        <button
+          class="w-8 h-8 flex items-center justify-center border-[1px] bg-[#fff] text-[grey] rounded-full hover:bg-[#E30909] hover:text-white transition-colors cursor-pointer"
+        >
+          <Icon name="mdi:heart" class="text-l transition-transform" />
+        </button>
+        <button
+          class="w-8 h-8 flex items-center justify-center bg-[#fff] border-[1px] text-[grey] rounded-full hover:bg-[#E30909] hover:text-white transition-colors cursor-pointer"
+        >
+          <Icon name="mdi:cart" class="text-l transition-transform" />
+        </button>
+      </div>
     </div>
   </NuxtLink>
 </template>
