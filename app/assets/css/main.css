@@ -1,4 +1,15 @@
 body {
     background-color: #13181e;
-    font-family: "JetBrains Mono", monospace;
+    /* font-family: "JetBrains Mono", monospace; */
+}
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.3s ease-in-out;
+}
+
+.page-enter-from,
+.page-leave-to {
+    opacity: 0;
+    filter: blur(0.5rem);
+    transform: translateY(10px);
 }

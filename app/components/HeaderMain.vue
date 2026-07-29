@@ -62,7 +62,7 @@
 
       <!-- ПРАВАЯ ЧАСТЬ: Кнопки личного кабинета / корзины -->
       <div class="flex items-center gap-6 flex-shrink-0">
-        <button
+        <!-- <button
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -70,9 +70,10 @@
             class="text-xl transition-transform group-hover:scale-110"
           />
           <span class="text-[12px]">Сравнение</span>
-        </button>
+        </button> -->
 
-        <button
+        <NuxtLink
+          to="favourites"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -80,9 +81,10 @@
             class="text-xl transition-transform group-hover:scale-110"
           />
           <span class="text-[12px]">Избранное</span>
-        </button>
+        </NuxtLink>
 
-        <button
+        <NuxtLink
+          to="cart"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -90,9 +92,10 @@
             class="text-xl transition-transform group-hover:scale-110"
           />
           <span class="text-[12px]">Корзина</span>
-        </button>
+        </NuxtLink>
 
-        <button
+        <NuxtLink
+          to="login"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -100,7 +103,7 @@
             class="text-xl transition-transform group-hover:scale-110"
           />
           <span class="text-[12px]">Войти</span>
-        </button>
+        </NuxtLink>
       </div>
     </div>
   </section>

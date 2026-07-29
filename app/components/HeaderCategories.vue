@@ -6,24 +6,25 @@
       class="mx-auto flex h-[58px] max-w-[1481px] w-full items-center justify-between px-[25px]"
     >
       <div class="flex items-center gap-7">
-        <NuxtLink
+        <!-- <NuxtLink
           to="/for-gamers"
           class="relative py-4 text-[14px] font-bold text-[#E30909] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#E30909] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
         >
           Для геймеров
-        </NuxtLink>
+        </NuxtLink> -->
 
         <NuxtLink
           v-for="(item, index) in menuItems"
           :key="index"
           :to="item.link"
           class="relative py-4 text-[14px] font-medium text-[#a0a5ab] hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#E30909] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+          active-class="!text-white after:!scale-x-100 font-semibold"
         >
           {{ item.name }}
         </NuxtLink>
       </div>
 
-      <div class="flex-shrink-0">
+      <!-- <div class="flex-shrink-0">
         <button
           class="flex items-center gap-2 rounded-full border border-[#E30909] px-4 py-1.5 text-[14px] font-medium text-white hover:bg-[#E30909]/20 transition-colors cursor-pointer"
         >
@@ -43,16 +44,17 @@
           </svg>
           Сервисы
         </button>
-      </div>
+      </div> -->
     </div>
   </nav>
 </template>
 
 <script setup>
 const menuItems = [
-  { name: "Смартфоны и гаджеты", link: "/smartphones" },
-  { name: "Компьютеры и ноутбуки", link: "/computers" },
-  { name: "Комплектующие для ПК", link: "/components" },
-  { name: "Компьютерная периферия", link: "/peripherals" },
+  { name: "Для геймеров", link: "/catalog/dlya-gejmerov" },
+  { name: "Смартфоны и гаджеты", link: "/catalog/smartfony-i-gadzhety" },
+  { name: "Компьютеры и ноутбуки", link: "/catalog/kompyutery-i-noutbuki" },
+  { name: "Комплектующие для ПК", link: "/catalog/komplektuyushchie-dlya-pk" },
+  { name: "Компьютерная периферия", link: "/catalog/kompyuternaya-periferiya" },
 ];
 </script>

@@ -17,8 +17,33 @@
     </div>
   </div>
 </template>
-
 <script setup>
+// Запускаем все запросы ПАРАЛЛЕЛЬНО в одном useAsyncData
+const { data: homeData } = await useAsyncData("home-page-data", async () => {
+  const [bannersRes, categoriesRes, recommendedRes, hotProductsRes] =
+    await Promise.all([
+      api.getBanners(),
+      api.getCategories(),
+      api.getRecommendedProducts(),
+      api.getHotProducts(),
+    ]);
+
+  return {
+    banners: bannersRes?.data ?? [],
+    categories: categoriesRes?.data ?? [],
+    recommended: recommendedRes?.data?.product_request ?? [],
+    hotProducts: hotProductsRes?.data?.product_request ?? [],
+  };
+});
+
+// Удобный доступ к данным через computed
+const banners = computed(() => homeData.value?.banners ?? []);
+const categories = computed(() => homeData.value?.categories ?? []);
+const recommendedProducts = computed(() => homeData.value?.recommended ?? []);
+const hotProducts = computed(() => homeData.value?.hotProducts ?? []);
+</script>
+
+<!-- <script setup>
 const { data: bannersRaw } = await useAsyncData("banners", () =>
   api.getBanners(),
 );
@@ -47,4 +72,4 @@ const hotProducts = computed(
   () => hotProductsRaw.value?.data?.product_request ?? [],
 );
 console.log("recommendedProducts", recommendedProducts);
-</script>
+</script> -->
