@@ -1,97 +1,106 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { api } from "~/utils/api";
 import { CATALOG_MOCK_DATA } from "~/data/catalog";
 
 const route = useRoute();
 
-// Получаем параметры из URL
+// Параметры URL
 const categorySlug = computed(() => route.params.slug);
 const subcategorySlug = computed(() => route.params.subslug);
 
-const products = ref([]);
-const meta = ref(null);
-const isLoading = ref(true);
-const error = ref(null);
-
-// Находим данные подкатегории в мок-структуре, чтобы вытащить ID для API
+// Находим данные подкатегории
 const currentSubcategory = computed(() => {
   const category = CATALOG_MOCK_DATA[categorySlug.value];
-  if (!category || !category.subcategories) return null;
-
+  if (!category?.subcategories) return null;
   return category.subcategories.find(
     (sub) => sub.slug === subcategorySlug.value,
   );
 });
 
-const fetchProducts = async () => {
-  isLoading.value = true;
-  error.value = null;
+const pageTitle = computed(() => currentSubcategory.value?.title || "Товары");
 
-  try {
-    const categoryId = currentSubcategory.value?.id || 148; // По умолчанию или из мока
+// Параметры для API (автоматически передаются в composable)
+const queryParams = computed(() => ({
+  category_id: currentSubcategory.value?.id,
+}));
 
-    const response = await api.getProducts({
-      category_id: categoryId,
-      page: 1,
-    });
+// Подключаем наш Composable
+const {
+  items: products,
+  loading,
+  isInitialLoading,
+  hasMorePages,
+  error,
+  loadMore,
+} = useDataLoader({
+  params: queryParams,
+  perPage: 15,
+});
 
-    products.value = response.data;
-    meta.value = response.meta;
-
-    console.log("Загруженные товары:", products.value);
-    console.log("Пагинация:", meta.value);
-  } catch (err) {
-    console.error("Ошибка при загрузке товаров:", err);
-    error.value = "Не удалось загрузить список товаров.";
-  } finally {
-    isLoading.value = false;
-  }
-};
-
+// Запускаем первую загрузку
 onMounted(() => {
-  fetchProducts();
+  loadMore();
 });
 </script>
 
 <template>
-  <div class="max-w-[1400px] mx-auto px-4 py-8 text-white">
+  <div class="max-w-[1400px] mx-auto px-4 py-8">
     <!-- Хлебные крошки -->
-    <div class="text-sm mb-4 text-gray-400">
-      <NuxtLink to="/">Главная</NuxtLink> /
-      <NuxtLink :to="`/catalog/${categorySlug}`">{{ categorySlug }}</NuxtLink> /
-      <span class="text-[#E30909]">{{ subcategorySlug }}</span>
-    </div>
+    <nav
+      class="flex items-center gap-2 text-xs md:text-sm font-bold tracking-wide uppercase mb-6 text-gray-400"
+    >
+      <NuxtLink to="/" class="hover:text-white transition-colors"
+        >Главная</NuxtLink
+      >
+      <span>→</span>
+      <NuxtLink
+        :to="`/catalog/${categorySlug}`"
+        class="hover:text-white transition-colors"
+      >
+        {{ categorySlug }}
+      </NuxtLink>
+      <span>→</span>
+      <span class="text-[#E30909]">{{ pageTitle }}</span>
+    </nav>
 
-    <h1 class="text-2xl font-bold mb-6">
-      Подкатегория: {{ currentSubcategory?.title || subcategorySlug }}
-    </h1>
-
-    <!-- Состояния -->
-    <div v-if="isLoading" class="py-12 text-center text-gray-400">
+    <!-- Первичная загрузка -->
+    <div v-if="isInitialLoading" class="py-16 text-center text-gray-400">
       Загрузка товаров...
     </div>
 
-    <div v-else-if="error" class="py-12 text-center text-red-500">
+    <!-- Ошибка -->
+    <div v-else-if="error" class="py-16 text-center text-red-500">
       {{ error }}
     </div>
 
-    <div v-else class="space-y-4">
-      <p class="text-sm text-gray-400">
-        Найдено товаров: {{ meta?.total || products.length }}
-      </p>
+    <template v-else>
+      <!-- Основная сетка товаров -->
+      <ProductSection
+        v-if="products.length"
+        :title="pageTitle"
+        :items="products"
+        :loading="loading"
+        @load-more="loadMore"
+      />
 
-      <!-- Временный дамп данных для проверки работы API -->
-      <div class="p-4 bg-[#1b233d] rounded-xl border border-white/10">
-        <h2 class="font-bold mb-2">Список товаров из API:</h2>
-        <ul class="list-disc pl-5 space-y-1">
-          <li v-for="product in products" :key="product.id">
-            <strong>{{ product.name }}</strong> —
-            {{ product.random_shop?.price }} сум ({{ product.brand?.name }})
-          </li>
-        </ul>
+      <div
+        v-else
+        class="py-16 text-center text-gray-400 bg-[#1b233d]/30 rounded-2xl border border-white/5"
+      >
+        В данной категории пока нет товаров.
       </div>
-    </div>
+
+      <!-- Спиннер подгрузки новых страниц -->
+      <div
+        v-if="loading && !isInitialLoading"
+        class="py-6 flex items-center justify-center gap-2 text-sm text-gray-400"
+      >
+        <span
+          class="w-5 h-5 border-2 border-[#E30909] border-t-transparent rounded-full animate-spin"
+        ></span>
+        Загрузка следующих товаров...
+      </div>
+    </template>
   </div>
 </template>

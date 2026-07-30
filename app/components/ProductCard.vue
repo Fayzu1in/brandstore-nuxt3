@@ -6,6 +6,7 @@
     <div>
       <div class="mb-3">
         <span
+          v-if="product.is_new"
           class="inline-block text-[11px] font-medium px-2 py-0.5 rounded-[14px] bg-[#02B513] text-white"
         >
           Новинка
@@ -32,12 +33,27 @@
         {{ product.model || "Название товара" }}
       </h4>
 
-      <div
-        class="text-[12px] text-[#a0a5ab] mb-1 flex items-center justify-center gap-1.5"
-        v-if="product.is_available"
-      >
-        <span class="w-[7px] h-[7px] bg-[#02B513] rounded-full"></span>
-        В наличии
+      <!-- Статусы наличия -->
+      <div class="text-[12px] mb-1 flex items-center justify-center gap-1.5">
+        <!-- 1. Если bs_quant >= 1 -> В магазине -->
+        <template v-if="(product.random_shop?.bs_quant ?? 0) >= 1">
+          <span class="w-[7px] h-[7px] bg-[#02B513] rounded-full"></span>
+          <span class="text-[#a0a5ab]"
+            >В магазине ( {{ product.random_shop?.bs_quant }}шт. )</span
+          >
+        </template>
+
+        <!-- 2. Если bs_quant == 0, но quantity > 0 -> На складе -->
+        <template v-else-if="(product.random_shop?.quantity ?? 0) > 0">
+          <span class="w-[7px] h-[7px] bg-[#E5A93C] rounded-full"></span>
+          <span class="text-[#a0a5ab]">На складе (сегодня/завтра)</span>
+        </template>
+
+        <!-- 3. Если и там и там 0 -> Под заказ -->
+        <template v-else>
+          <span class="w-[7px] h-[7px] bg-[#a0a5ab] rounded-full"></span>
+          <span class="text-[#a0a5ab]">Под заказ</span>
+        </template>
       </div>
     </div>
 

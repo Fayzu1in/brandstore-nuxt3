@@ -24,4 +24,32 @@ export const api = {
         },
       })
       .then(r => r.data),
+
+  async getProductBySlug(slug: string) {
+    try {
+      // Указываем <string>, чтобы TS понял, что на выходе вернется HTML-строка
+      const html = await $fetch<string>(`https://brandstore.uz/productPage/${slug}`, {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
+      });
+
+      // Регуляркой вырезаем содержимое <script id="__NEXT_DATA__">
+      const match = html.match(
+        /<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/
+      );
+
+      if (!match || !match[1]) {
+        console.warn('__NEXT_DATA__ не найден на странице');
+        return null;
+      }
+
+      const parsedData = JSON.parse(match[1]);
+      return parsedData?.props?.pageProps?.singleProduct || null;
+    } catch (err) {
+      console.error('Ошибка при запросе товара через HTML:', err);
+      return null;
+    }
+  },
 }
