@@ -1,7 +1,9 @@
 <template>
   <div>
     <MainSlider :slides-data="banners" v-if="banners" />
-    <div class="relative z-10 -mt-6 rounded-t-[25px] bg-[#13181e]">
+    <div
+      class="relative z-10 -mt-6 rounded-t-[25px] bg-[#13181e] overflow-hidden"
+    >
       <ProductSection
         title="Горящие предложения"
         :items="hotProducts"

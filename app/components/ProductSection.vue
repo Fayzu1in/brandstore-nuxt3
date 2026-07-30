@@ -1,19 +1,24 @@
 <template>
   <section class="w-full text-white py-8">
     <div class="mx-auto max-w-[1481px] w-full px-[25px]">
-      <div class="flex items-end justify-between mb-6">
+      <div class="flex items-center justify-between gap-2 mb-4 md:mb-6">
+        <!-- Заголовок: уменьшен размер шрифта на мобайле (18px -> 28px) + запрет переноса одной строки -->
         <h2
-          class="text-[24px] font-bold tracking-tight text-white md:text-[28px]"
+          class="text-[18px] sm:text-[22px] md:text-[28px] font-bold tracking-tight text-white leading-tight truncate pr-2"
         >
           {{ title }}
         </h2>
 
+        <!-- Ссылка: См. все на мобилке / Показать всё на десктопе -->
         <NuxtLink
           v-if="viewAllLink"
           :to="viewAllLink"
-          class="text-[14px] font-medium text-[#a0a5ab] hover:text-[#E30909] transition-colors flex items-center gap-1 group"
+          class="text-[12px] sm:text-[14px] font-medium text-[#a0a5ab] hover:text-[#E30909] transition-colors flex items-center gap-1 shrink-0 whitespace-nowrap group"
         >
-          Показать всё
+          <!-- На мобилках "См. все", начиная с sm "Показать всё" -->
+          <span class="sm:hidden">См. все</span>
+          <span class="hidden sm:inline">Показать всё</span>
+
           <span
             class="inline-block transition-transform group-hover:translate-x-1"
             >→</span
@@ -160,28 +165,83 @@ onUnmounted(() => {
 </script>
 
 <style>
+/* 1. Плашка-контейнер во всю высоту */
 .products-carousel .swiper-button-next,
 .products-carousel .swiper-button-prev {
+  top: 0 !important;
+  bottom: 0 !important;
+  margin-top: 0 !important;
+  height: 100% !important;
+  width: 48px !important;
+  z-index: 20 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   color: #ffffff !important;
-  background-color: rgba(28, 34, 41, 0.8);
-  backdrop-filter: blur(10px);
-  width: 44px;
-  height: 44px;
-  border-radius: 15px;
-  border: 1px solid #0000002f;
-  transition: all 0.2s ease;
+
+  /* ЖЕСТКО УМЕНЬШАЕМ СТРЕЛКУ СВАЙПЕРА */
+  --swiper-navigation-size: 14px !important;
 }
 
-.products-carousel .swiper-button-next:after,
-.products-carousel .swiper-button-prev:after {
-  font-size: 14px;
+/* Градиент справа */
+.products-carousel .swiper-button-next {
+  right: 0 !important;
+  background: linear-gradient(
+    270deg,
+    rgba(19, 24, 30, 0.85) 0%,
+    rgba(19, 24, 30, 0) 100%
+  ) !important;
+  border-top-right-radius: 16px !important;
+  border-bottom-right-radius: 16px !important;
+}
+
+/* Градиент слева */
+.products-carousel .swiper-button-prev {
+  left: 0 !important;
+  background: linear-gradient(
+    90deg,
+    rgba(19, 24, 30, 0.85) 0%,
+    rgba(19, 24, 30, 0) 100%
+  ) !important;
+  border-top-left-radius: 16px !important;
+  border-bottom-left-radius: 16px !important;
+}
+
+/* 2. Делаем подложку под стрелку маленькой и круглой */
+.products-carousel .swiper-button-next::after,
+.products-carousel .swiper-button-prev::after {
+  font-size: 14px !important; /* Доп. фиксация */
   font-weight: bold;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(4px);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.products-carousel .swiper-button-next:hover,
-.products-carousel .swiper-button-prev:hover {
-  background-color: #e30909;
-  border-color: #e30909;
+/* Ховер */
+.products-carousel .swiper-button-next:hover::after,
+.products-carousel .swiper-button-prev:hover::after {
+  background-color: #e30909 !important;
+  transform: scale(1.1);
+}
+
+/* Скрываем на мобилках */
+@media (max-width: 640px) {
+  .products-carousel .swiper-button-next,
+  .products-carousel .swiper-button-prev {
+    display: none !important;
+  }
 }
 
 .products-carousel .swiper-button-disabled {

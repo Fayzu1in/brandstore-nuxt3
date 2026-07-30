@@ -1,23 +1,29 @@
 <template>
-  <section class="w-full text-white py-8">
-    <div class="mx-auto max-w-[1481px] w-full px-[25px]">
+  <section class="w-full text-white py-6 md:py-8">
+    <div class="mx-auto max-w-[1481px] w-full px-4 sm:px-[25px]">
+      <!-- Заголовок с аккуратным отступом -->
       <h2
-        class="text-[24px] font-bold tracking-tight text-white md:text-[28px] mb-6"
+        class="text-[18px] sm:text-[22px] md:text-[28px] font-bold tracking-tight text-white leading-tight mb-4 md:mb-6"
       >
         Популярные категории
       </h2>
 
+      <!-- Сетка кнопок -->
       <div
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-4"
       >
         <NuxtLink
           v-for="(category, index) in categories"
           :key="index"
           :to="category.link || '#'"
-          class="button-30"
+          class="button-30 !h-auto min-h-[48px] sm:min-h-[54px] !px-2.5 !py-2 flex items-center justify-center text-center !whitespace-normal"
           role="button"
         >
-          {{ category.name }}
+          <span
+            class="text-[11px] sm:text-[13px] md:text-[15px] font-medium leading-tight line-clamp-2"
+          >
+            {{ category.name }}
+          </span>
         </NuxtLink>
       </div>
     </div>

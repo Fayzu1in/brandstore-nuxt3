@@ -1,39 +1,55 @@
 <template>
   <div class="mx-auto max-w-[1481px] w-full px-[25px] pt-[30px] text-white">
-    <!-- Индикатор загрузки -->
-    <div v-if="pending" class="py-20 text-center text-gray-400">
-      Загрузка информации о товаре...
+    <div v-if="pending" class="animate-pulse space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div class="flex gap-4 flex-col-reverse sm:flex-row">
+          <div class="flex sm:flex-col gap-2 w-full sm:w-20">
+            <div
+              v-for="i in 4"
+              :key="i"
+              class="w-20 h-20 bg-[#1A1D21] rounded-xl"
+            ></div>
+          </div>
+          <div
+            class="flex-1 bg-[#1A1D21] rounded-2xl min-h-[350px] sm:min-h-[450px]"
+          ></div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+          <div class="flex justify-between items-center">
+            <div class="h-8 bg-[#1A1D21] rounded-lg w-32"></div>
+            <div class="flex gap-3">
+              <div class="w-10 h-10 bg-[#1A1D21] rounded-full"></div>
+              <div class="w-10 h-10 bg-[#1A1D21] rounded-full"></div>
+            </div>
+          </div>
+
+          <div class="h-6 bg-[#1A1D21] rounded-full w-40"></div>
+          <div class="h-8 bg-[#1A1D21] rounded-lg w-3/4"></div>
+          <div class="h-6 bg-[#1A1D21] rounded-lg w-1/2"></div>
+
+          <!-- Блок цены -->
+          <div
+            class="h-28 bg-[#1A1D21] rounded-xl border border-gray-800"
+          ></div>
+
+          <!-- Кнопки -->
+          <div class="flex gap-3 mt-2">
+            <div class="h-12 bg-[#1A1D21] rounded-xl flex-1"></div>
+            <div class="h-12 bg-[#1A1D21] rounded-xl flex-1"></div>
+          </div>
+          <div class="h-14 bg-[#1A1D21] rounded-xl w-full"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Сообщение об ошибке -->
     <div v-else-if="error || !product" class="py-20 text-center text-red-500">
       Товар не найден или произошла ошибка загрузки.
     </div>
 
-    <!-- Основной контент товара -->
     <template v-else>
-      <!-- 1. ХЛЕБНЫЕ КРОШКИ -->
-      <!-- <div>
-        <AppBreadcrumbs
-          :items="[
-            ...(primaryCategory
-              ? [
-                  {
-                    label: primaryCategory.name,
-                    to: `/catalog/${primaryCategory.slug}`,
-                  },
-                ]
-              : []),
-            { label: product?.name || 'Товар' },
-          ]"
-        />
-      </div> -->
-
-      <!-- ОСНОВНАЯ СЕКЦИЯ: ЛЕВО / ПРАВО -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <!-- ================= ЛЕВАЯ СТОРОНА (ГАЛЕРЕЯ) ================= -->
         <div class="flex gap-4 flex-col-reverse sm:flex-row">
-          <!-- Миниатюры -->
           <div
             v-if="images.length > 1"
             class="flex sm:flex-col gap-2 w-full sm:w-20 overflow-x-auto"
@@ -58,7 +74,6 @@
             </button>
           </div>
 
-          <!-- Главное изображение -->
           <div
             class="flex-1 bg-white rounded-2xl p-6 min-h-[350px] sm:min-h-[450px] flex items-center justify-center"
           >
@@ -70,11 +85,8 @@
           </div>
         </div>
 
-        <!-- ================= ПРАВАЯ СТОРОНА (ИНФО) ================= -->
         <div class="flex flex-col">
-          <!-- Верхняя строчка: Бренд и Кнопки действий -->
           <div class="flex items-center justify-between mb-4">
-            <!-- Логотип/название бренда -->
             <div class="h-8 flex items-center">
               <img
                 v-if="product.brand?.image?.url"
@@ -87,9 +99,7 @@
               </span>
             </div>
 
-            <!-- Кнопки действий -->
             <div class="flex items-center gap-3 text-gray-400">
-              <!-- Избранное -->
               <button
                 class="hover:text-[#E30909] transition-colors p-2.5 bg-[#1A1D21] rounded-full cursor-pointer flex items-center justify-center group"
                 title="В избранное"
@@ -100,7 +110,6 @@
                 />
               </button>
 
-              <!-- Сравнение -->
               <button
                 class="hover:text-blue-500 transition-colors p-2.5 bg-[#1A1D21] rounded-full cursor-pointer flex items-center justify-center group"
                 title="Сравнить"
@@ -111,7 +120,6 @@
                 />
               </button>
 
-              <!-- Поделиться -->
               <button
                 class="hover:text-green-500 transition-colors p-2.5 bg-[#1A1D21] rounded-full cursor-pointer flex items-center justify-center group"
                 title="Поделиться"
@@ -126,7 +134,6 @@
 
           <!-- Динамический статус наличия -->
           <div class="mb-4">
-            <!-- 1. В магазине -->
             <span
               v-if="(shopData?.bs_quant ?? 0) >= 1"
               class="inline-flex items-center gap-1.5 text-[13px] text-[#02B513] bg-[#02B513]/10 px-3 py-1 rounded-full font-medium"
@@ -135,7 +142,6 @@
               В магазине ({{ shopData.bs_quant }} шт.)
             </span>
 
-            <!-- 2. На складе -->
             <span
               v-else-if="(shopData?.quantity ?? 0) > 0"
               class="inline-flex items-center gap-1.5 text-[13px] text-[#E5A93C] bg-[#E5A93C]/10 px-3 py-1 rounded-full font-medium"
@@ -144,7 +150,6 @@
               На складе (сегодня/завтра)
             </span>
 
-            <!-- 3. Под заказ -->
             <span
               v-else
               class="inline-flex items-center gap-1.5 text-[13px] text-gray-400 bg-gray-800 px-3 py-1 rounded-full font-medium"
@@ -161,12 +166,11 @@
             {{ product.name }}
           </h1>
 
-          <!-- Блок цены и кэшбека -->
+          <!-- Блок цены -->
           <div
             class="flex flex-col sm:flex-row sm:items-end justify-between bg-[#1A1D21] p-4 sm:p-5 rounded-xl mb-6 border border-gray-800 gap-4"
           >
             <div class="flex flex-col gap-1">
-              <!-- Старая цена (увеличен шрифт и яркая линия зачеркивания) -->
               <div
                 v-if="oldPrice"
                 class="text-base font-medium text-gray-400 line-through decoration-[#E30909]/80 decoration-2"
@@ -174,7 +178,6 @@
                 {{ formatPrice(oldPrice) }} сум
               </div>
 
-              <!-- Актуальная цена -->
               <div
                 class="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2"
               >
@@ -186,7 +189,6 @@
                   }}
                 </span>
 
-                <!-- Огонек при наличии скидки -->
                 <span
                   v-if="hasDiscount"
                   class="inline-flex items-center justify-center bg-orange-500/10 text-orange-500 p-1 rounded-md text-xl"
@@ -196,11 +198,9 @@
                 </span>
               </div>
 
-              <!-- Гарантия и НДС -->
               <div
                 class="flex items-center gap-3 text-[12px] text-gray-400 mt-1 flex-wrap"
               >
-                <!-- Гарантия из random_shop -->
                 <span
                   v-if="shopData?.warranty_period"
                   class="flex items-center gap-1 text-gray-300"
@@ -216,7 +216,6 @@
                   >•</span
                 >
 
-                <!-- Уведомление про НДС -->
                 <span class="flex items-center gap-1 text-gray-400">
                   <Icon
                     name="mdi:check-circle-outline"
@@ -274,7 +273,7 @@
         </div>
       </div>
 
-      <!-- Дополнительно: Описание товара -->
+      <!-- Описание -->
       <div
         v-if="product.description"
         class="mt-12 border-t border-gray-800 pt-8"
@@ -285,6 +284,7 @@
           v-html="product.description"
         ></div>
       </div>
+
       <div class="my-10 mb-[-10px] relative">
         <div class="absolute inset-0 flex items-center" aria-hidden="true">
           <div class="w-full border-t border-white/10"></div>
@@ -298,7 +298,6 @@
         </div>
       </div>
 
-      <!-- Секция похожих товаров в виде карусели -->
       <ProductSection
         v-if="similarProducts.length || similarLoading"
         title=""
@@ -316,31 +315,26 @@ import { useRoute } from "vue-router";
 import { api } from "~/utils/api";
 
 const route = useRoute();
-const slug = computed(() => route.params.slug as string);
-
-// Запрашиваем данные через Nuxt useAsyncData для корректной работы SSR
 
 const {
   data: product,
   pending,
   error,
-} = await useAsyncData(
-  () => `product-${route.params.slug}`,
+} = useLazyAsyncData(
+  `product-${route.params.slug}`,
   () => api.getProductBySlug(route.params.slug as string),
   {
     watch: [() => route.params.slug],
   },
 );
-console.log("product", product.value);
+
 const productId = computed(() => product.value?.id);
 
-// Запрашиваем похожие товары (берем например 10 штук для хорошей карусели)
-const { data: similarRes, pending: similarLoading } = await useAsyncData(
+// Похожие товары подгружаются аналогично через lazy
+const { data: similarRes, pending: similarLoading } = useLazyAsyncData(
   `similar-products-${productId.value}`,
   async () => {
-    if (!productId.value) {
-      return null; // Внутри async-функции это автоматически обернется в Promise<null>
-    }
+    if (!productId.value) return null;
     return await api.getSimilarProducts(productId.value, 10);
   },
   {
@@ -349,7 +343,6 @@ const { data: similarRes, pending: similarLoading } = await useAsyncData(
   },
 );
 
-// Достаём массив товаров из респонса
 const similarProducts = computed(() => {
   return (
     similarRes.value?.data?.product_request ||
@@ -359,28 +352,18 @@ const similarProducts = computed(() => {
   );
 });
 
-// Активное изображение в галерее
 const activeImage = ref<string>("");
-
-// Картинки товара
 const images = computed(() => product.value?.images || []);
 
-// Устанавливаем главное фото при получении данных
 watchEffect(() => {
   if (images.value.length > 0) {
     activeImage.value = images.value[0].url;
   }
 });
 
-const productData = computed(() => product.value);
-
-// Данные магазина/склада
 const shopData = computed(() => product.value?.random_shop);
-
-// Цены
 const hasDiscount = computed(() => !!shopData.value?.discount?.price);
 
-// 1. Актуальная цена (со скидкой или обычная)
 const currentPrice = computed(() => {
   if (hasDiscount.value) {
     return shopData.value?.discount?.price;
@@ -388,7 +371,6 @@ const currentPrice = computed(() => {
   return shopData.value?.price || null;
 });
 
-// 2. Старая цена (отображается только при наличии скидки)
 const oldPrice = computed(() => {
   if (hasDiscount.value) {
     return shopData.value?.price || null;
@@ -398,12 +380,8 @@ const oldPrice = computed(() => {
 
 const monthlyPrice = computed(() => shopData.value?.monthly_price);
 
-// 3. Хелпер для форматирования чисел с пробелами (например: 1 500 000)
 const formatPrice = (val: number | undefined | null) => {
   if (!val) return "";
   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
-
-// Первичная категория для хлебных крошек
-const primaryCategory = computed(() => product.value?.categories?.[0] || null);
 </script>
