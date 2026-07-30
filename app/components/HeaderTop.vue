@@ -6,7 +6,7 @@
       class="mx-auto flex h-10 max-w-[1481px] w-full items-center justify-between px-[24px]"
     >
       <div class="flex items-center gap-5">
-        <span class="flex items-center gap-1 text-[#a0a5ab]">
+        <span class="flex items-center gap-1 text-[#a0a5ab] cursor-default">
           <span>📍</span> Узбекистан
         </span>
 
@@ -14,16 +14,18 @@
           <NuxtLink
             to="/delivery"
             class="text-[#a0a5ab] hover:text-white transition-colors"
+            active-class="!text-white"
             >Доставка</NuxtLink
           >
-          <NuxtLink
+          <!-- <NuxtLink
             to="/shops"
             class="text-[#a0a5ab] hover:text-white transition-colors"
             >Магазины</NuxtLink
-          >
+          > -->
           <NuxtLink
-            to="/blog"
+            to="/articles"
             class="text-[#a0a5ab] hover:text-white transition-colors"
+            active-class="!text-white"
             >Техноблог</NuxtLink
           >
         </nav>

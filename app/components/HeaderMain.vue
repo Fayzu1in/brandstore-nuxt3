@@ -62,45 +62,48 @@
 
       <!-- ПРАВАЯ ЧАСТЬ: Кнопки личного кабинета / корзины -->
       <div class="flex items-center gap-6 flex-shrink-0">
-        <!-- Сравнение -->
-        <button
+        <!-- <button
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
-          <span class="text-xl group-hover:scale-105 transition-transform"
-            >📊</span
-          >
+          <Icon
+            name="mdi:align-horizontal-right"
+            class="text-xl transition-transform group-hover:scale-110"
+          />
           <span class="text-[12px]">Сравнение</span>
-        </button>
+        </button> -->
 
-        <!-- Избранное -->
-        <button
+        <NuxtLink
+          to="/favourites"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
-          <span class="text-xl group-hover:scale-105 transition-transform"
-            >❤️</span
-          >
+          <Icon
+            name="mdi:cards-heart"
+            class="text-xl transition-transform group-hover:scale-110"
+          />
           <span class="text-[12px]">Избранное</span>
-        </button>
+        </NuxtLink>
 
-        <!-- Корзина -->
-        <button
+        <NuxtLink
+          to="/cart"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
-          <span class="text-xl group-hover:scale-105 transition-transform"
-            >🛍️</span
-          >
+          <Icon
+            name="mdi:cart"
+            class="text-xl transition-transform group-hover:scale-110"
+          />
           <span class="text-[12px]">Корзина</span>
-        </button>
-
-        <!-- Войти -->
-        <button
+        </NuxtLink>
+        <!-- 
+        <NuxtLink
+          to="/login"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
-          <span class="text-xl group-hover:scale-105 transition-transform"
-            >👤</span
-          >
+          <Icon
+            name="mdi:account"
+            class="text-xl transition-transform group-hover:scale-110"
+          />
           <span class="text-[12px]">Войти</span>
-        </button>
+        </NuxtLink> -->
       </div>
     </div>
   </section>

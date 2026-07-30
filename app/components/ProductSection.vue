@@ -21,7 +21,15 @@
         </NuxtLink>
       </div>
 
-      <div v-if="carousel" class="relative products-carousel">
+      <div
+        v-if="loading && (!items || !items.length)"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+      >
+        <ProductCardSkeleton v-for="n in skeletonCount" :key="n" />
+      </div>
+
+      <!-- Вариант 1: Swiper Карусель -->
+      <div v-else-if="carousel" class="relative products-carousel">
         <swiper
           :modules="[SwiperNavigation, SwiperMousewheel]"
           :space-between="20"
@@ -34,8 +42,8 @@
             '1280': { slidesPerView: 5 },
           }"
           :mousewheel="{
-            forceToAxis: true, // Реагирует только на горизонтальный скролл, не мешая вертикальному скроллу страницы
-            releaseOnEdges: true, // Отпускает страницу, если слайды закончились
+            forceToAxis: true,
+            releaseOnEdges: true,
           }"
           class="w-full !overflow-visible lg:!overflow-hidden"
         >
@@ -45,18 +53,27 @@
         </swiper>
       </div>
 
-      <div
-        v-else
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
-      >
-        <ProductCard v-for="item in items" :key="item.id" :product="item" />
+      <!-- Вариант 2: Сетка с отдельным элементом-триггером внизу -->
+      <div v-else>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+        >
+          <ProductCard v-for="item in items" :key="item.id" :product="item" />
+          <!-- Шиммеры для подгрузки новых страниц снизу (Infinity Scroll) -->
+          <template v-if="loading && items.length">
+            <ProductCardSkeleton v-for="n in 5" :key="'append-' + n" />
+          </template>
+        </div>
+
+        <!-- Отдельный триггер внизу сетки для железного срабатывания -->
+        <div ref="triggerRef" class="w-full h-10 my-2"></div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-// Импортируем Swiper для карусели товаров
+import { ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import {
   Navigation as SwiperNavigation,
@@ -66,7 +83,7 @@ import {
 import "swiper/css";
 import "swiper/css/navigation";
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -77,19 +94,72 @@ defineProps({
     default: () => [],
   },
   viewAllLink: {
-    type: String,
+    type: [String, Object],
     default: "",
   },
-  // Добавляем флаг карусели. По умолчанию false (обычная сетка)
   carousel: {
     type: Boolean,
     default: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  skeletonCount: {
+    type: Number,
+    default: 5,
+  },
+});
+
+const emit = defineEmits(["load-more"]);
+
+const triggerRef = ref(null);
+let observer = null;
+
+const setupObserver = () => {
+  if (props.carousel) return;
+
+  if (observer) {
+    observer.disconnect();
+  }
+
+  if (!triggerRef.value) return;
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && !props.loading) {
+        emit("load-more");
+      }
+    },
+    {
+      rootMargin: "200px", // Подгружаем за 200px до триггера
+      threshold: 0,
+    },
+  );
+
+  observer.observe(triggerRef.value);
+};
+
+onMounted(async () => {
+  await nextTick();
+  setupObserver();
+});
+
+watch(
+  () => props.items.length,
+  async () => {
+    await nextTick();
+    setupObserver();
+  },
+);
+
+onUnmounted(() => {
+  if (observer) observer.disconnect();
 });
 </script>
 
 <style>
-/* Кастомизация стрелок Swiper под темный стиль Технопарка */
 .products-carousel .swiper-button-next,
 .products-carousel .swiper-button-prev {
   color: #ffffff !important;
@@ -114,7 +184,6 @@ defineProps({
   border-color: #e30909;
 }
 
-/* Скрываем стрелки, если они задизейблены */
 .products-carousel .swiper-button-disabled {
   opacity: 0 !important;
   pointer-events: none;

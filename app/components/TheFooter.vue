@@ -269,7 +269,6 @@
         class="flex flex-col md:flex-row items-center justify-between pt-6 text-[12px] text-[#71767c]"
       >
         <p>© 2020-2026 OOO "BRANDSTORE". Все права защищены.</p>
-        <p class="mt-2 md:mt-0">Разработано в Ташкенте</p>
       </div>
     </div>
   </footer>
