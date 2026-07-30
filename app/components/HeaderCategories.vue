@@ -3,48 +3,22 @@
     class="w-full bg-black/40 backdrop-blur-md border-b border-white/5 z-30 transition-all duration-300"
   >
     <div
-      class="mx-auto flex h-[58px] max-w-[1481px] w-full items-center justify-between px-[25px]"
+      class="mx-auto flex h-[48px] sm:h-[58px] max-w-[1481px] w-full items-center justify-between px-4 sm:px-[25px]"
     >
-      <div class="flex items-center gap-7">
-        <!-- <NuxtLink
-          to="/for-gamers"
-          class="relative py-4 text-[14px] font-bold text-[#E30909] transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#E30909] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
-        >
-          Для геймеров
-        </NuxtLink> -->
-
+      <!-- Обертка со скроллом для мобилок -->
+      <div
+        class="flex items-center gap-5 sm:gap-7 w-full overflow-x-auto no-scrollbar whitespace-nowrap"
+      >
         <NuxtLink
           v-for="(item, index) in menuItems"
           :key="index"
           :to="item.link"
-          class="relative py-4 text-[14px] font-medium text-[#a0a5ab] hover:text-white transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#E30909] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+          class="relative py-3 sm:py-4 text-[13px] sm:text-[14px] font-medium text-[#a0a5ab] hover:text-white transition-colors duration-200 shrink-0 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[#E30909] after:origin-left after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
           active-class="!text-white after:!scale-x-100 font-semibold"
         >
           {{ item.name }}
         </NuxtLink>
       </div>
-
-      <!-- <div class="flex-shrink-0">
-        <button
-          class="flex items-center gap-2 rounded-full border border-[#E30909] px-4 py-1.5 text-[14px] font-medium text-white hover:bg-[#E30909]/20 transition-colors cursor-pointer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            class="w-4 h-4 text-[#E30909]"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
-            />
-          </svg>
-          Сервисы
-        </button>
-      </div> -->
     </div>
   </nav>
 </template>
@@ -58,3 +32,14 @@ const menuItems = [
   { name: "Компьютерная периферия", link: "/catalog/kompyuternaya-periferiya" },
 ];
 </script>
+
+<style scoped>
+/* Скрываем стандартный дефолтный скроллбар браузера для чистого вида */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
