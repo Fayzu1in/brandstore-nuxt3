@@ -12,6 +12,16 @@ export const api = {
   getHotProducts: () => instance.get('/home', { params: { type: 'hot_products' } }).then(r => r.data),
   getRecommendedProducts: () => instance.get('/home', { params: { type: 'recommended_products' } }).then(r => r.data),
   getTechnoBlogs: () => instance.get('https://api.brandstore.uz/api/posts').then(r => r.data),
+  searchProducts: (query: string, page = 1) =>
+    instance
+      .get('/search', {
+        params: {
+          search: query,
+          shop: 1,
+          page,
+        },
+      })
+      .then((r) => r.data),
   getSimilarProducts: (productId: number | string, perPage = 4) =>
     instance
       .get('/products/similar', {
