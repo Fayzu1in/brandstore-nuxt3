@@ -13,28 +13,21 @@
     <!-- Основной контент товара -->
     <template v-else>
       <!-- 1. ХЛЕБНЫЕ КРОШКИ -->
-      <nav class="text-[13px] text-gray-400 mb-6">
-        <ul class="flex items-center gap-2 flex-wrap">
-          <li>
-            <NuxtLink to="/" class="hover:text-white transition-colors"
-              >Главная</NuxtLink
-            >
-          </li>
-          <li>/</li>
-          <li v-if="primaryCategory">
-            <NuxtLink
-              :to="`/catalog/${primaryCategory.slug}`"
-              class="hover:text-white transition-colors"
-            >
-              {{ primaryCategory.name }}
-            </NuxtLink>
-          </li>
-          <li v-if="primaryCategory">/</li>
-          <li class="text-gray-200 truncate max-w-[300px]">
-            {{ product.name }}
-          </li>
-        </ul>
-      </nav>
+      <!-- <div>
+        <AppBreadcrumbs
+          :items="[
+            ...(primaryCategory
+              ? [
+                  {
+                    label: primaryCategory.name,
+                    to: `/catalog/${primaryCategory.slug}`,
+                  },
+                ]
+              : []),
+            { label: product?.name || 'Товар' },
+          ]"
+        />
+      </div> -->
 
       <!-- ОСНОВНАЯ СЕКЦИЯ: ЛЕВО / ПРАВО -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">

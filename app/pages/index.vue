@@ -5,7 +5,17 @@
       <ProductSection
         title="Горящие предложения"
         :items="hotProducts"
-        viewAllLink="/catalog/personal"
+        :view-all-link="{
+          path: '/catalog/personal',
+          query: {
+            ...(hotProductsParams?.category_id && {
+              category_id: hotProductsParams.category_id,
+            }),
+            ...(hotProductsParams?.discount !== undefined && {
+              discount: hotProductsParams.discount,
+            }),
+          },
+        }"
         carousel
       />
 
@@ -17,7 +27,10 @@
     </div>
   </div>
 </template>
+
 <script setup>
+import { computed } from "vue";
+
 // Запускаем все запросы ПАРАЛЛЕЛЬНО в одном useAsyncData
 const { data: homeData } = await useAsyncData("home-page-data", async () => {
   const [bannersRes, categoriesRes, recommendedRes, hotProductsRes] =
@@ -32,44 +45,28 @@ const { data: homeData } = await useAsyncData("home-page-data", async () => {
     banners: bannersRes?.data ?? [],
     categories: categoriesRes?.data ?? [],
     recommended: recommendedRes?.data?.product_request ?? [],
+    // Сохраняем товары и params из ответа hotProducts
     hotProducts: hotProductsRes?.data?.product_request ?? [],
+    hotProductsParams: hotProductsRes?.data?.params ?? null,
   };
 });
 
-// Удобный доступ к данным через computed
+// Доступ к данным через computed
 const banners = computed(() => homeData.value?.banners ?? []);
 const categories = computed(() => homeData.value?.categories ?? []);
 const recommendedProducts = computed(() => homeData.value?.recommended ?? []);
 const hotProducts = computed(() => homeData.value?.hotProducts ?? []);
+
+// Формируем ссылку с динамическими query-параметрами из API
+const hotProductsLink = computed(() => {
+  const params = homeData.value?.hotProductsParams;
+
+  return {
+    path: "/catalog/personal",
+    query: {
+      ...(params?.category_id && { category_id: params.category_id }),
+      ...(params?.discount !== undefined && { discount: params.discount }),
+    },
+  };
+});
 </script>
-
-<!-- <script setup>
-const { data: bannersRaw } = await useAsyncData("banners", () =>
-  api.getBanners(),
-);
-const { data: categoriesRaw } = await useAsyncData("categories", () =>
-  api.getCategories(),
-);
-// const { data: hotProductsRaw } = await useAsyncData("hotProducts", () =>
-//   api.getHotProducts(),
-// );
-const { data: recommendedRaw } = await useAsyncData("recommended", () =>
-  api.getRecommendedProducts(),
-);
-
-const banners = computed(() => bannersRaw.value?.data ?? []);
-const categories = computed(() => categoriesRaw.value?.data ?? []);
-console.log("categ", categories);
-// const hotProducts = computed(() => hotProductsRaw.value?.data ?? []);
-const recommendedProducts = computed(
-  () => recommendedRaw.value?.data.product_request ?? [],
-);
-
-const { data: hotProductsRaw } = await useAsyncData("hotProducts", () =>
-  api.getHotProducts(),
-);
-const hotProducts = computed(
-  () => hotProductsRaw.value?.data?.product_request ?? [],
-);
-console.log("recommendedProducts", recommendedProducts);
-</script> -->

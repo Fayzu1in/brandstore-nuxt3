@@ -1,31 +1,22 @@
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import { CATALOG_MOCK_DATA } from "~/data/catalog";
 
 const route = useRoute();
 
-// Параметры URL
-const categorySlug = computed(() => route.params.slug);
-const subcategorySlug = computed(() => route.params.subslug);
-
-// Находим данные подкатегории
-const currentSubcategory = computed(() => {
-  const category = CATALOG_MOCK_DATA[categorySlug.value];
-  if (!category?.subcategories) return null;
-  return category.subcategories.find(
-    (sub) => sub.slug === subcategorySlug.value,
-  );
+// Вычисляем динамический заголовок в зависимости от параметров в URL
+const pageTitle = computed(() => {
+  if (route.query.discount) return "Горящие предложения";
+  if (route.query.type === "recommended") return "Рекомендуемые товары";
+  return "Подборка товаров";
 });
 
-const pageTitle = computed(() => currentSubcategory.value?.title || "Товары");
-
-// Параметры для API (автоматически передаются в composable)
+// Собираем параметры из URL для передачи в API
 const queryParams = computed(() => ({
-  category_id: currentSubcategory.value?.id,
+  ...route.query,
 }));
 
-// Подключаем наш Composable
+// Подключаем тот же Composable
 const {
   items: products,
   loading,
@@ -33,29 +24,29 @@ const {
   hasMorePages,
   error,
   loadMore,
+  reset, // Добавь метод сброса в composable, если сменяются query-параметры
 } = useDataLoader({
   params: queryParams,
   perPage: 15,
 });
 
-// Запускаем первую загрузку
+// Запускаем первичную загрузку
 onMounted(() => {
   loadMore();
 });
+
+// Если пользователь переключился между подборками без перезагрузки страницы
+watch(
+  () => route.query,
+  () => {
+    if (typeof reset === "function") reset();
+    loadMore();
+  },
+);
 </script>
 
 <template>
   <div class="max-w-[1400px] mx-auto px-4 py-8">
-    <!-- Хлебные крошки -->
-    <!-- <div>
-      <AppBreadcrumbs
-        :items="[
-          { label: categorySlug, to: `/catalog/${categorySlug}` },
-          { label: pageTitle },
-        ]"
-      />
-    </div> -->
-
     <!-- Первичная загрузка -->
     <div v-if="isInitialLoading" class="py-16 text-center text-gray-400">
       Загрузка товаров...
@@ -80,7 +71,7 @@ onMounted(() => {
         v-else
         class="py-16 text-center text-gray-400 bg-[#1b233d]/30 rounded-2xl border border-white/5"
       >
-        В данной категории пока нет товаров.
+        В данной подборке пока нет товаров.
       </div>
 
       <!-- Спиннер подгрузки новых страниц -->

@@ -83,7 +83,7 @@ const props = defineProps({
     default: () => [],
   },
   viewAllLink: {
-    type: String,
+    type: [String, Object],
     default: "",
   },
   carousel: {
