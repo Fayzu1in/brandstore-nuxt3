@@ -1,5 +1,5 @@
 <template>
-  <section class="w-full text-white py-8">
+  <section class="w-full text-white py-8 overflow-hidden">
     <div class="mx-auto max-w-[1481px] w-full px-[25px]">
       <div class="flex items-center justify-between gap-2 mb-4 md:mb-6">
         <!-- Заголовок: уменьшен размер шрифта на мобайле (18px -> 28px) + запрет переноса одной строки -->
