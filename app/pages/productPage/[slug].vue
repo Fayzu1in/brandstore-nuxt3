@@ -285,6 +285,27 @@
           v-html="product.description"
         ></div>
       </div>
+      <div class="my-10 mb-[-10px] relative">
+        <div class="absolute inset-0 flex items-center" aria-hidden="true">
+          <div class="w-full border-t border-white/10"></div>
+        </div>
+        <div class="relative flex justify-center">
+          <span
+            class="bg-[#13181e] px-4 text-xs font-semibold uppercase tracking-wider text-gray-500"
+          >
+            Похожие товары
+          </span>
+        </div>
+      </div>
+
+      <!-- Секция похожих товаров в виде карусели -->
+      <ProductSection
+        v-if="similarProducts.length || similarLoading"
+        title=""
+        :items="similarProducts"
+        :loading="similarLoading"
+        carousel
+      />
     </template>
   </div>
 </template>
@@ -311,6 +332,32 @@ const {
   },
 );
 console.log("product", product.value);
+const productId = computed(() => product.value?.id);
+
+// Запрашиваем похожие товары (берем например 10 штук для хорошей карусели)
+const { data: similarRes, pending: similarLoading } = await useAsyncData(
+  `similar-products-${productId.value}`,
+  async () => {
+    if (!productId.value) {
+      return null; // Внутри async-функции это автоматически обернется в Promise<null>
+    }
+    return await api.getSimilarProducts(productId.value, 10);
+  },
+  {
+    watch: [productId],
+    immediate: !!productId.value,
+  },
+);
+
+// Достаём массив товаров из респонса
+const similarProducts = computed(() => {
+  return (
+    similarRes.value?.data?.product_request ||
+    similarRes.value?.data ||
+    similarRes.value ||
+    []
+  );
+});
 
 // Активное изображение в галерее
 const activeImage = ref<string>("");

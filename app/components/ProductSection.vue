@@ -21,8 +21,15 @@
         </NuxtLink>
       </div>
 
+      <div
+        v-if="loading && (!items || !items.length)"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+      >
+        <ProductCardSkeleton v-for="n in skeletonCount" :key="n" />
+      </div>
+
       <!-- Вариант 1: Swiper Карусель -->
-      <div v-if="carousel" class="relative products-carousel">
+      <div v-else-if="carousel" class="relative products-carousel">
         <swiper
           :modules="[SwiperNavigation, SwiperMousewheel]"
           :space-between="20"
@@ -52,6 +59,10 @@
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
         >
           <ProductCard v-for="item in items" :key="item.id" :product="item" />
+          <!-- Шиммеры для подгрузки новых страниц снизу (Infinity Scroll) -->
+          <template v-if="loading && items.length">
+            <ProductCardSkeleton v-for="n in 5" :key="'append-' + n" />
+          </template>
         </div>
 
         <!-- Отдельный триггер внизу сетки для железного срабатывания -->
@@ -93,6 +104,10 @@ const props = defineProps({
   loading: {
     type: Boolean,
     default: false,
+  },
+  skeletonCount: {
+    type: Number,
+    default: 5,
   },
 });
 

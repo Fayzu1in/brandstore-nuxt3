@@ -42,57 +42,35 @@ const {
 onMounted(() => {
   loadMore();
 });
+const handleRetry = () => {
+  if (typeof reload === "function") {
+    reload();
+  } else {
+    window.location.reload();
+  }
+};
 </script>
 
+<!-- В файле personal.vue или [subslug].vue -->
 <template>
   <div class="max-w-[1400px] mx-auto px-4 py-8">
-    <!-- Хлебные крошки -->
-    <!-- <div>
-      <AppBreadcrumbs
-        :items="[
-          { label: categorySlug, to: `/catalog/${categorySlug}` },
-          { label: pageTitle },
-        ]"
-      />
-    </div> -->
-
-    <!-- Первичная загрузка -->
-    <div v-if="isInitialLoading" class="py-16 text-center text-gray-400">
-      Загрузка товаров...
-    </div>
+    <!-- <AppBreadcrumbs :items="[{ label: pageTitle }]" /> -->
 
     <!-- Ошибка -->
-    <div v-else-if="error" class="py-16 text-center text-red-500">
-      {{ error }}
-    </div>
+    <AppErrorState
+      v-if="error"
+      title="Не удалось загрузить данные"
+      description="Что-то пошло не так при загрузке каталога. Проверьте подключение или повторите попытку."
+      @retry="handleRetry"
+    />
 
-    <template v-else>
-      <!-- Основная сетка товаров -->
-      <ProductSection
-        v-if="products.length"
-        :title="pageTitle"
-        :items="products"
-        :loading="loading"
-        @load-more="loadMore"
-      />
-
-      <div
-        v-else
-        class="py-16 text-center text-gray-400 bg-[#1b233d]/30 rounded-2xl border border-white/5"
-      >
-        В данной категории пока нет товаров.
-      </div>
-
-      <!-- Спиннер подгрузки новых страниц -->
-      <div
-        v-if="loading && !isInitialLoading"
-        class="py-6 flex items-center justify-center gap-2 text-sm text-gray-400"
-      >
-        <span
-          class="w-5 h-5 border-2 border-[#E30909] border-t-transparent rounded-full animate-spin"
-        ></span>
-        Загрузка следующих товаров...
-      </div>
-    </template>
+    <!-- Секция товаров с поддержкой скелетона -->
+    <ProductSection
+      v-else
+      :title="pageTitle"
+      :items="products"
+      :loading="isInitialLoading || loading"
+      @load-more="loadMore"
+    />
   </div>
 </template>
