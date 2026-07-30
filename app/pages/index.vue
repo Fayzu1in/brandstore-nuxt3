@@ -20,7 +20,7 @@
       />
 
       <PopularCategories :categories="categories" />
-      <ProductSection title="Новинки" :items="recommendedProducts" />
+      <ProductSection title="Новинки" :items="recommendedProducts" carousel />
       <ForyouSection :favs="categories" />
       <PromoBanner />
       <BrandsSection :brands="brands" />

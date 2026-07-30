@@ -6,7 +6,7 @@
     <div>
       <div
         v-if="hasDiscount"
-        class="inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-[#E30909] text-[11px] font-semibold px-2 py-0.5 rounded-md ml-auto"
+        class="absolute top-3 left-3 z-10 inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-[#E30909] text-[11px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-sm"
       >
         <Icon name="mdi:tag-outline" class="text-xs" />
         <span>Скидка</span>
@@ -66,17 +66,18 @@
 
     <div class="flex items-center justify-between mt-4 pt-3 border-gray-800">
       <!-- Фиксированная минимальная высота исключает "пляску" карточек в сетке -->
-      <div class="flex flex-col justify-end min-h-[42px]">
-        <!-- Старая цена (зачёркнутая) -->
+      <!-- Оборачиваем блок в relative -->
+      <div class="relative flex flex-col justify-end min-h-[42px]">
+        <!-- Старая цена (зачёркнутая) — абсолют сверху -->
         <div
           v-if="oldPrice"
-          class="text-[11px] pb-[3px] font-medium text-gray-400 line-through decoration-[#E30909]/80 leading-none mb-0.5"
+          class="absolute -top-3.5 left-0 text-[11px] font-medium text-gray-400 line-through decoration-[#E30909]/80 leading-none whitespace-nowrap pointer-events-none"
         >
           {{ formatPrice(oldPrice) }}
           <span class="text-[10px] no-underline">сум</span>
         </div>
 
-        <!-- Актуальная цена -->
+        <!-- Актуальная цена (всегда остаётся на своём месте) -->
         <div v-if="currentPrice" class="flex flex-col items-start leading-none">
           <!-- Крупное число -->
           <span
@@ -85,7 +86,7 @@
             {{ formatPrice(currentPrice) }}
           </span>
 
-          <!-- Мелкая надпись "сум" всегда снизу -->
+          <!-- Мелкая надпись "сум / НДС" -->
           <span
             class="text-[10px] pt-[3px] sm:text-[11px] font-normal text-gray-400 mt-0.5"
           >
