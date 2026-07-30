@@ -32,17 +32,11 @@ const categoryData = computed(() => {
 <template>
   <div class="max-w-[1400px] mx-auto px-4 py-8">
     <!-- Хлебные крошки -->
-    <nav
-      class="flex items-center gap-2 text-xs md:text-sm font-bold tracking-wide uppercase mb-8"
-    >
-      <NuxtLink to="/" class="text-gray-400 hover:text-white transition-colors">
-        Главная
-      </NuxtLink>
-      <span class="text-gray-500">→</span>
-      <span class="text-[#E30909]">
-        {{ categoryData.title }}
-      </span>
-    </nav>
+    <!-- <div>
+      <AppBreadcrumbs
+        :items="[{ label: categoryData?.title || 'Категория' }]"
+      />
+    </div> -->
 
     <!-- Заголовок страницы -->
     <h1

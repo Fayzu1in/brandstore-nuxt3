@@ -73,7 +73,7 @@
         </button> -->
 
         <NuxtLink
-          to="favourites"
+          to="/favourites"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -84,7 +84,7 @@
         </NuxtLink>
 
         <NuxtLink
-          to="cart"
+          to="/cart"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -93,9 +93,9 @@
           />
           <span class="text-[12px]">Корзина</span>
         </NuxtLink>
-
+        <!-- 
         <NuxtLink
-          to="login"
+          to="/login"
           class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
         >
           <Icon
@@ -103,7 +103,7 @@
             class="text-xl transition-transform group-hover:scale-110"
           />
           <span class="text-[12px]">Войти</span>
-        </NuxtLink>
+        </NuxtLink> -->
       </div>
     </div>
   </section>
