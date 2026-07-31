@@ -3,33 +3,29 @@
     <!-- Баннер-слайдер (принимает pending для показа шиммера) -->
     <MainSlider :slides-data="banners" :loading="pending" />
 
-    <div
-      class="relative z-10 -mt-6 rounded-t-[25px] bg-[#13181e] overflow-hidden"
-    >
-      <!-- Горящие предложения -->
-      <ProductSection
-        title="Горящие предложения"
-        :items="hotProducts"
-        :loading="pending"
-        :skeleton-count="5"
-        :view-all-link="hotProductsLink"
-        carousel
-      />
+    <!-- Горящие предложения -->
+    <ProductSection
+      title="Горящие предложения"
+      :items="hotProducts"
+      :loading="pending"
+      :skeleton-count="5"
+      :view-all-link="hotProductsLink"
+      carousel
+    />
 
-      <PopularCategories :categories="categories" :loading="pending" />
+    <PopularCategories :categories="categories" :loading="pending" />
 
-      <ProductSection
-        title="Новинки"
-        :items="recommendedProducts"
-        :loading="pending"
-        :skeleton-count="5"
-        carousel
-      />
+    <ProductSection
+      title="Новинки"
+      :items="recommendedProducts"
+      :loading="pending"
+      :skeleton-count="5"
+      carousel
+    />
 
-      <ForyouSection :favs="categories" :loading="pending" />
-      <PromoBanner />
-      <BrandsSection :brands="brands" :loading="pending" />
-    </div>
+    <ForyouSection :favs="categories" :loading="pending" />
+    <PromoBanner />
+    <BrandsSection :brands="brands" :loading="pending" />
   </div>
 </template>
 
