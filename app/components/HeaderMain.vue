@@ -5,7 +5,6 @@
     <div
       class="mx-auto flex flex-col md:flex-row max-w-[1481px] w-full items-center justify-between px-4 sm:px-[25px] gap-3 md:gap-6"
     >
-      <!-- Логотип и Мобильные кнопки -->
       <div class="flex items-center justify-between w-full md:w-auto">
         <div class="flex-shrink-0">
           <NuxtLink to="/" class="block">
@@ -41,7 +40,6 @@
         </div>
       </div>
 
-      <!-- Блок поиска с дропдауном -->
       <div
         ref="searchContainerRef"
         class="w-full md:flex-grow md:max-w-[680px] relative"
@@ -49,7 +47,6 @@
         <div
           class="relative flex items-center w-full h-[40px] sm:h-[44px] bg-white rounded-full p-1 pl-2 sm:pl-2 pr-4 overflow-hidden z-30"
         >
-          <!-- Кнопка "Каталог" -->
           <button
             type="button"
             class="flex items-center gap-1.5 sm:gap-2 bg-[#E30909] text-white px-3 sm:px-5 py-2 rounded-full font-medium text-[13px] sm:text-[15px] hover:bg-[#b80707] transition-colors cursor-pointer h-[32px] sm:h-[36px] flex-shrink-0"
@@ -58,7 +55,6 @@
             <span class="hidden xs:inline sm:inline">Каталог</span>
           </button>
 
-          <!-- Поле ввода -->
           <input
             v-model="searchQuery"
             type="text"
@@ -69,7 +65,6 @@
             @keydown.enter="goToSearchPage"
           />
 
-          <!-- Иконка лупы / очистки -->
           <div class="flex items-center gap-2 flex-shrink-0">
             <button
               v-if="searchQuery"
@@ -103,13 +98,11 @@
           </div>
         </div>
 
-        <!-- Выпадающее меню поиска (Dropdown) -->
         <Transition name="fade">
           <div
             v-if="isOpen && searchQuery.trim().length >= 2"
             class="absolute top-full left-0 w-full bg-[#1c2229] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-20 py-2 mt-2 backdrop-blur-md"
           >
-            <!-- 1. ШИММЕРЫ ЗАГРУЗКИ (SKELETONS) -->
             <div v-if="isLoading" class="p-2 space-y-2">
               <div
                 v-for="n in 4"
@@ -125,7 +118,6 @@
               </div>
             </div>
 
-            <!-- 2. НАЙДЕННЫЕ ТОВАРЫ -->
             <div
               v-else-if="results.length"
               class="max-h-[360px] overflow-y-auto custom-scrollbar"
@@ -183,11 +175,9 @@
                   </div>
                 </div>
 
-                <!-- БЛОК ЦЕНЫ (С учетом скидки) -->
                 <div
                   class="flex flex-col items-end justify-center shrink-0 ml-2 text-right"
                 >
-                  <!-- Старая цена (зачёркнутая), если есть скидка -->
                   <span
                     v-if="getOldPrice(product.random_shop)"
                     class="text-[11px] text-gray-400 line-through decoration-[#E30909] leading-none mb-0.5"
@@ -195,7 +185,6 @@
                     {{ formatPrice(getOldPrice(product.random_shop)) }} сум
                   </span>
 
-                  <!-- Актуальная цена -->
                   <span
                     v-if="getCurrentPrice(product.random_shop)"
                     class="text-[13px] font-bold text-white leading-none"
@@ -203,7 +192,6 @@
                     {{ formatPrice(getCurrentPrice(product.random_shop)) }} сум
                   </span>
 
-                  <!-- По запросу -->
                   <span
                     v-else
                     class="text-[12px] font-medium text-gray-400 leading-none"
@@ -213,7 +201,6 @@
                 </div>
               </NuxtLink>
 
-              <!-- Посмотреть все результаты -->
               <button
                 type="button"
                 class="w-full py-2.5 px-4 text-center text-xs font-semibold text-[#E30909] bg-white/5 hover:bg-white/10 transition-colors border-t border-white/5 cursor-pointer mt-1"
@@ -223,7 +210,6 @@
               </button>
             </div>
 
-            <!-- 3. НИЧЕГО НЕ НАЙДЕНО -->
             <div
               v-else-if="!isLoading"
               class="p-6 text-center text-sm text-gray-400"
@@ -237,7 +223,6 @@
         </Transition>
       </div>
 
-      <!-- Десктопные кнопки -->
       <div class="hidden md:flex items-center gap-6 flex-shrink-0">
         <NuxtLink
           to="/favourites"
