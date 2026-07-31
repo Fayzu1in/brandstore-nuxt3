@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-[#0e1217] text-white py-4">
-    <!-- Испольуем готовую секцию -->
     <ProductSection
       :title="sectionTitle"
       :items="products"
@@ -44,15 +43,21 @@ const searchQuery = computed(() => (route.query.q || "").toString().trim());
 
 const sectionTitle = computed(() => {
   if (!searchQuery.value) return "Поиск товаров";
-  return `Результаты поиска: «${searchQuery.value}» ${totalCount.value ? `(${totalCount.value})` : ""}`;
+  return `Результаты поиска: «${searchQuery.value}» ${
+    totalCount.value ? `(${totalCount.value})` : ""
+  }`;
 });
 
-// Загрузка товаров с поддержкой пагинации
 const fetchProducts = async (page = 1) => {
   if (!searchQuery.value) {
     products.value = [];
     totalCount.value = 0;
     return;
+  }
+
+  if (page === 1) {
+    products.value = [];
+    totalCount.value = 0;
   }
 
   isLoading.value = true;
