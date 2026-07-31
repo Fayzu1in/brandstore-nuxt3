@@ -159,12 +159,9 @@
                       <span
                         class="w-1.5 h-1.5 bg-[#02B513] rounded-full shrink-0"
                       ></span>
-                      <span class="text-[#a0a5ab] truncate">
-                        В магазине ({{ product.random_shop?.bs_quant }} шт.)
-                      </span>
+                      <span class="text-[#a0a5ab] truncate"> На витрине </span>
                     </template>
 
-                    <!-- 2. На складе -->
                     <template
                       v-else-if="(product.random_shop?.quantity ?? 0) > 0"
                     >

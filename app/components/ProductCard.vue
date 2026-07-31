@@ -50,9 +50,7 @@
       <div class="text-[12px] mb-1 flex items-center justify-center gap-1.5">
         <template v-if="(shopData?.bs_quant ?? 0) >= 1">
           <span class="w-[7px] h-[7px] bg-[#02B513] rounded-full"></span>
-          <span class="text-[#a0a5ab]"
-            >В магазине ( {{ shopData?.bs_quant }} шт. )</span
-          >
+          <span class="text-[#a0a5ab]">На витрине</span>
         </template>
 
         <template v-else-if="(shopData?.quantity ?? 0) > 0">
