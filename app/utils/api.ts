@@ -5,13 +5,48 @@ const instance = axios.create({
   timeout: 10000,
 })
 
+instance.interceptors.request.use((config) => {
+  const showProgress = (config as any).progress !== false
+
+  if (showProgress && process.client) {
+    const loadingIndicator = useLoadingIndicator()
+    loadingIndicator.start()
+  }
+
+  return config;
+})
+
+instance.interceptors.response.use(
+  (response) => {
+    const showProgress = (response.config as any).progress !== false
+    if (showProgress && process.client) {
+      const loadingIndicator = useLoadingIndicator()
+      loadingIndicator.finish()
+    }
+    return response
+  },
+  (error) => {
+    const showProgress = (error.config as any)?.progress !== false
+    if (showProgress && process.client) {
+      const loadingIndicator = useLoadingIndicator()
+      loadingIndicator.finish()
+    }
+    return Promise.reject(error)
+  }
+)
+
 export const api = {
-  getCategories: () => instance.get('/categories').then(r => r.data),
-  getBanners: () => instance.get('/banners').then(r => r.data),
-  getBrands: () => instance.get('/home', { params: { type: 'brand' } }).then(r => r.data),
-  getHotProducts: () => instance.get('/home', { params: { type: 'hot_products' } }).then(r => r.data),
-  getRecommendedProducts: () => instance.get('/home', { params: { type: 'recommended_products' } }).then(r => r.data),
-  getTechnoBlogs: () => instance.get('https://api.brandstore.uz/api/posts').then(r => r.data),
+  getCategories: () => instance.get('/categories').then((r) => r.data),
+  getBanners: () => instance.get('/banners').then((r) => r.data),
+  getBrands: () =>
+    instance.get('/home', { params: { type: 'brand' } }).then((r) => r.data),
+  getHotProducts: () =>
+    instance.get('/home', { params: { type: 'hot_products' } }).then((r) => r.data),
+  getRecommendedProducts: () =>
+    instance.get('/home', { params: { type: 'recommended_products' } }).then((r) => r.data),
+  getTechnoBlogs: () =>
+    instance.get('https://api.brandstore.uz/api/posts').then((r) => r.data),
+
   searchProducts: (query: string, page = 1) =>
     instance
       .get('/search', {
@@ -24,12 +59,13 @@ export const api = {
       .then((r) => r.data),
   getSimilarProducts: (productId: number | string, perPage = 4) =>
     instance
-      .get('/products/similar', {
+      .get('/products/similar',{
         params: {
           product_id: productId,
           per_page: perPage,
         },
-      })
+        progress: false,
+      }as any)
       .then((r) => r.data),
   getProducts: (params = {}) =>
     instance
@@ -42,7 +78,7 @@ export const api = {
           ...params,
         },
       })
-      .then(r => r.data),
+      .then((r) => r.data),
 
   getProductBySlug: (slug: string) =>
     instance
@@ -50,9 +86,12 @@ export const api = {
         params: { slug },
       })
       .then((r) => {
-        // Зависит от того, как API возвращает один товар:
-        // Если возвращает массив с одним элементом: r.data.data?.[0] или r.data?.[0]
-        // Если сразу объект: r.data
-        return Array.isArray(r.data?.data) ? r.data.data[0] : (r.data?.data || r.data);
+        return Array.isArray(r.data?.data)
+          ? r.data.data[0]
+          : r.data?.data || r.data
       }),
+
+  // Пример фонового запроса с отключенным лоадером:
+  // sendPosition: (fileId, position) => 
+  //   instance.post(`/file/played/${fileId}`, { position }, { progress: false } as any),
 }
