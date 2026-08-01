@@ -48,11 +48,15 @@
           class="relative flex items-center w-full h-[40px] sm:h-[44px] bg-white rounded-full p-1 pl-2 sm:pl-2 pr-4 overflow-hidden z-30"
         >
           <button
+            @click="$emit('toggle-menu')"
             type="button"
-            class="flex items-center gap-1.5 sm:gap-2 bg-[#E30909] text-white px-3 sm:px-5 py-2 rounded-full font-medium text-[13px] sm:text-[15px] hover:bg-[#b80707] transition-colors cursor-pointer h-[32px] sm:h-[36px] flex-shrink-0"
+            class="flex items-center gap-2 bg-[#E30909] text-white px-3 sm:px-5 py-2 rounded-xl font-medium text-[13px] sm:text-[15px] hover:bg-[#b80707] transition-all duration-200 cursor-pointer h-[32px] sm:h-[36px] flex-shrink-0"
           >
-            <span class="text-base sm:text-lg leading-none">≡</span>
-            <span class="hidden xs:inline sm:inline">Каталог</span>
+            <Icon
+              :name="isMenuOpen ? 'mdi:close' : 'mdi:menu'"
+              class="w-5 h-5"
+            />
+            <span>Категории</span>
           </button>
 
           <input
@@ -247,6 +251,26 @@
         </NuxtLink>
       </div>
     </div>
+    <!-- Десктопное меню -->
+    <div class="hidden lg:block">
+      <CategoryMegaMenu :is-open="isMenuOpen" @close="$emit('toggle-menu')" />
+    </div>
+
+    <!-- Мобильная шторка -->
+
+    <!-- Темный оверлей под меню -->
+    <!-- Монтируем только то меню, которое соответствует экрану -->
+    <CategoryMegaMenu
+      v-if="isDesktop"
+      :is-open="isMenuOpen"
+      @close="$emit('toggle-menu')"
+    />
+
+    <CategoryMobileDrawer
+      v-else
+      :is-open="isMenuOpen"
+      @close="$emit('toggle-menu')"
+    />
   </section>
 </template>
 
@@ -254,6 +278,21 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { api } from "~/utils/api";
+import { useMediaQuery } from "@vueuse/core";
+
+// Принимаем пропсы
+defineProps({
+  isMenuOpen: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+// Эмитим события наверх
+defineEmits(["toggle-menu"]);
+
+// Определяем десктоп ли это (экран >= 1024px)
+const isDesktop = useMediaQuery("(min-width: 1024px)");
 
 const router = useRouter();
 const route = useRoute();
@@ -282,15 +321,12 @@ const handleInput = () => {
     try {
       const res = await api.searchProducts(searchQuery.value.trim());
 
-      // 1. Достаем продукты (проверяем и корень, и res.data)
       const allProducts =
         res?.products || res?.data?.products || res?.data || [];
 
-      // 2. Достаем meta.total
       totalCount.value =
         res?.meta?.total || res?.data?.meta?.total || allProducts.length;
 
-      // 3. Берём первые 6 для выпадашки
       results.value = Array.isArray(allProducts) ? allProducts.slice(0, 6) : [];
     } catch (e) {
       console.error("Ошибка при поиске:", e);
@@ -331,12 +367,13 @@ const handleClickOutside = (event) => {
     isOpen.value = false;
   }
 };
+
 // Проверка наличия скидки в random_shop
 const hasDiscount = (shop) => {
   return Boolean(shop?.discount && shop?.discount?.price);
 };
 
-// Получение актуальной цены (если есть скидка — берем discount.price, иначе обычный price)
+// Получение актуальной цены
 const getCurrentPrice = (shop) => {
   if (hasDiscount(shop)) {
     return shop?.discount?.price;
@@ -344,7 +381,7 @@ const getCurrentPrice = (shop) => {
   return shop?.price || null;
 };
 
-// Получение старой цены (только если есть скидка, старой ценой становится основной price)
+// Получение старой цены
 const getOldPrice = (shop) => {
   if (hasDiscount(shop)) {
     return shop?.price || null;
@@ -358,7 +395,7 @@ const formatPrice = (val) => {
   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
-// Синхронизация при смене URL
+// Синхронизация поискового запроса с URL
 watch(
   () => route.query.q,
   (newQ) => {
