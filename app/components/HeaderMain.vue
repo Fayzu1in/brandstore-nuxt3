@@ -230,23 +230,62 @@
       <div class="hidden md:flex items-center gap-6 flex-shrink-0">
         <NuxtLink
           to="/favourites"
-          class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
+          :class="[
+            'flex flex-col items-center gap-1 transition-colors cursor-pointer group relative',
+            route.path === '/favourites'
+              ? 'text-white'
+              : 'text-[#a0a5ab] hover:text-white',
+          ]"
         >
-          <Icon
-            name="mdi:cards-heart"
-            class="text-xl transition-transform group-hover:scale-110"
-          />
+          <!-- Контейнер для иконки и бейджика -->
+          <div class="relative">
+            <Icon
+              name="mdi:cards-heart"
+              :class="[
+                'text-xl transition-transform group-hover:scale-110',
+                route.path === '/favourites' ? 'text-[#E30909]' : '',
+              ]"
+            />
+
+            <!-- Бейджик с количеством товаров -->
+            <span
+              v-if="favoritesStore.count > 0"
+              class="absolute -top-1.5 -right-2.5 bg-[#E30909] text-white text-[10px] font-bold h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center border-2 border-[#12161D]"
+            >
+              {{ favoritesStore.count }}
+            </span>
+          </div>
+
           <span class="text-[12px]">Избранное</span>
         </NuxtLink>
 
         <NuxtLink
           to="/cart"
-          class="flex flex-col items-center gap-1 text-[#a0a5ab] hover:text-white transition-colors cursor-pointer group"
+          :class="[
+            'flex flex-col items-center gap-1 transition-colors cursor-pointer group relative',
+            route.path === '/cart'
+              ? 'text-white'
+              : 'text-[#a0a5ab] hover:text-white',
+          ]"
         >
-          <Icon
-            name="mdi:cart"
-            class="text-xl transition-transform group-hover:scale-110"
-          />
+          <div class="relative">
+            <Icon
+              name="mdi:cart-outline"
+              :class="[
+                'text-xl transition-transform group-hover:scale-110',
+                route.path === '/cart' ? 'text-[#E30909]' : '',
+              ]"
+            />
+
+            <!-- Счетчик товаров в корзине -->
+            <span
+              v-if="cartStore.totalCount > 0"
+              class="absolute -top-1.5 -right-2.5 bg-[#E30909] text-white text-[10px] font-bold h-4 min-w-[16px] px-1 rounded-full flex items-center justify-center border-2 border-[#12161D]"
+            >
+              {{ cartStore.totalCount }}
+            </span>
+          </div>
+
           <span class="text-[12px]">Корзина</span>
         </NuxtLink>
       </div>
@@ -279,6 +318,8 @@ import { ref, onMounted, onUnmounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { api } from "~/utils/api";
 import { useMediaQuery } from "@vueuse/core";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useCartStore } from "~/stores/useCartStore";
 
 // Принимаем пропсы
 defineProps({
@@ -293,10 +334,10 @@ defineEmits(["toggle-menu"]);
 
 // Определяем десктоп ли это (экран >= 1024px)
 const isDesktop = useMediaQuery("(min-width: 1024px)");
-
+const cartStore = useCartStore();
 const router = useRouter();
 const route = useRoute();
-
+const favoritesStore = useFavoritesStore();
 const searchQuery = ref("");
 const results = ref([]);
 const totalCount = ref(0);
