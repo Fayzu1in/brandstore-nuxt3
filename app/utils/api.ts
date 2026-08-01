@@ -55,7 +55,8 @@ export const api = {
           shop: 1,
           page,
         },
-      })
+        progress: false
+      }as any)
       .then((r) => r.data),
   getSimilarProducts: (productId: number | string, perPage = 4) =>
     instance
@@ -77,7 +78,8 @@ export const api = {
           page: 1,
           ...params,
         },
-      })
+        progress: false,
+      } as any)
       .then((r) => r.data),
 
   getProductBySlug: (slug: string) =>
