@@ -1,31 +1,37 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { CATALOG_MOCK_DATA } from "~/data/catalog";
+import { useCategoryStore } from "~/stores/useCategoryStore";
 
 const route = useRoute();
+const categoryStore = useCategoryStore();
 
-// Параметры URL
-const categorySlug = computed(() => route.params.slug);
-const subcategorySlug = computed(() => route.params.subslug);
+// Параметры URL (/catalog/[slug]/[subslug])
+const categorySlug = computed(() => route.params.slug as string);
+const subcategorySlug = computed(() => route.params.subslug as string);
 
-// Находим данные подкатегории
+// 1. Находим родительскую категорию из стора
+const currentCategory = computed(() => {
+  return categoryStore.getCategoryBySlug(categorySlug.value);
+});
+
+// 2. Ищем подкатегорию внутри childs родительской категории
 const currentSubcategory = computed(() => {
-  const category = CATALOG_MOCK_DATA[categorySlug.value];
-  if (!category?.subcategories) return null;
-  return category.subcategories.find(
+  if (!currentCategory.value?.childs) return null;
+  return currentCategory.value.childs.find(
     (sub) => sub.slug === subcategorySlug.value,
   );
 });
 
-const pageTitle = computed(() => currentSubcategory.value?.title || "Товары");
+// Название страницы (используем .name из бэкенда)
+const pageTitle = computed(() => currentSubcategory.value?.name || "Товары");
 
-// Параметры для API (автоматически передаются в composable)
+// Параметры для API подгрузки товаров (category_id передается в composable)
 const queryParams = computed(() => ({
   category_id: currentSubcategory.value?.id,
 }));
 
-// Подключаем наш Composable
+// Подключаем Composable
 const {
   items: products,
   loading,
@@ -42,6 +48,7 @@ const {
 onMounted(() => {
   loadMore();
 });
+
 const handleRetry = () => {
   if (typeof reload === "function") {
     reload();
@@ -51,7 +58,6 @@ const handleRetry = () => {
 };
 </script>
 
-<!-- В файле personal.vue или [subslug].vue -->
 <template>
   <div class="max-w-[1400px] mx-auto px-4 py-8">
     <!-- <AppBreadcrumbs :items="[{ label: pageTitle }]" /> -->

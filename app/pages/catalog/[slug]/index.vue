@@ -1,95 +1,84 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { CATALOG_MOCK_DATA } from "~/data/catalog";
+import { useCategoryStore } from "~/stores/useCategoryStore";
 
 const route = useRoute();
+const categoryStore = useCategoryStore();
 
-// Получаем slug из URL (/catalog/smartfony-i-gadzhety -> slug = "smartfony-i-gadzhety")
-const currentSlug = computed(() => route.params.slug);
+// Получаем текущий slug из URL
+const currentSlug = computed(() => route.params.slug as string);
 
-// --- СЕЙЧАС: Данные из моков ---
-const categoryData = computed(() => {
-  return (
-    CATALOG_MOCK_DATA[currentSlug.value] || {
-      title: "Категория",
-      subcategories: [],
-    }
-  );
+// Мгновенно берем текущую категорию из стора
+const currentCategory = computed(() => {
+  return categoryStore.getCategoryBySlug(currentSlug.value);
 });
+console.log("currentCategory", currentCategory.value);
 
-/* 
-  --- ПОЗЖЕ: Когда появится API, просто заменяешь блок выше на это: ---
-  
-  const { data: categoryData, status } = await useAsyncData(
-    () => `category-${currentSlug.value}`,
-    () => api.getCategoryBySlug(currentSlug.value),
-    { watch: [currentSlug], lazy: true }
-  )
-*/
+// Список подкатегорий (childs из API)
+const subcategories = computed(() => {
+  return currentCategory.value?.childs || [];
+});
 </script>
 
 <template>
   <div class="max-w-[1400px] mx-auto px-4 py-4 md:py-8">
-    <!-- Хлебные крошки -->
-    <!-- <div>
-      <AppBreadcrumbs
-        :items="[{ label: categoryData?.title || 'Категория' }]"
-      />
-    </div> -->
-
-    <!-- Заголовок страницы -->
+    <!-- Заголовок категории -->
     <h1
       class="text-xl md:text-3xl font-bold mb-5 md:mb-8 uppercase text-white tracking-wide"
     >
-      {{ categoryData.title }}
+      {{ currentCategory?.name || "Загрузка..." }}
     </h1>
 
-    <!-- Сетка карточек: 2 колонки по умолчанию (мобилка), дальше 3, 4, 5 -->
+    <!-- Список подкатегорий -->
     <div
-      v-if="categoryData.subcategories.length"
+      v-if="subcategories.length"
       class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6"
     >
       <NuxtLink
-        v-for="sub in categoryData.subcategories"
+        v-for="sub in subcategories"
         :key="sub.id"
         :to="`/catalog/${currentSlug}/${sub.slug}`"
         class="card-container group relative w-full bg-[#1b233d]/60 hover:bg-[#1b233d] border border-white/5 hover:border-[#E30909]/40 rounded-[16px] sm:rounded-[20px] p-2 overflow-hidden shadow-lg transition-all duration-300 transform hover:-translate-y-1.5"
       >
-        <!-- Верхняя секция с градиентом и MDI иконкой -->
         <div
           class="top-section relative h-[100px] sm:h-[140px] rounded-[12px] sm:rounded-[15px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#E30909] via-[#910505] to-[#12161D]"
         >
-          <!-- Декоративный срезанный угол в стиле Uiverse -->
           <div
             class="custom-skew-border absolute top-0 left-0 h-[20px] sm:h-[28px] w-[75px] sm:w-[110px] bg-[#13181e] rounded-br-[8px] sm:rounded-br-[10px] z-10"
           ></div>
 
-          <!-- MDI Иконка с эффектом свечения и зума -->
-          <div
-            class="relative z-20 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-black/30 backdrop-blur-md border border-white/10 group-hover:scale-110 group-hover:border-[#E30909] transition-all duration-300"
+          <!-- <div
+            class="relative z-20 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-black/30 backdrop-blur-md border border-white/10 group-hover:scale-110 group-hover:border-[#E30909] transition-all duration-300 overflow-hidden"
           >
+            <img
+              v-if="sub.image"
+              :src="sub.wicon"
+              :alt="sub.name"
+              class="w-full h-full object-cover p-2"
+            />
+
             <Icon
-              :name="sub.icon"
+              v-else
+              name="mdi:shape-outline"
               class="w-6 h-6 sm:w-9 sm:h-9 text-white group-hover:text-[#E30909] transition-colors duration-300"
             />
-          </div>
+          </div> -->
         </div>
 
-        <!-- Нижняя секция с названием -->
         <div class="bottom-section py-2.5 sm:py-4 px-1 sm:px-2 text-center">
           <span
             class="title block text-xs sm:text-sm font-bold text-white group-hover:text-[#E30909] transition-colors duration-200 line-clamp-2 leading-tight sm:leading-snug"
           >
-            {{ sub.title }}
+            {{ sub.name }}
           </span>
         </div>
       </NuxtLink>
     </div>
 
-    <!-- Заглушка, если категория пуста -->
+    <!-- Заглушка, если подкатегорий нет -->
     <div
-      v-else
+      v-else-if="!categoryStore.isLoading"
       class="py-16 text-center text-gray-400 bg-[#1b233d]/30 rounded-2xl border border-white/5"
     >
       В данной категории пока нет подкатегорий.
@@ -98,7 +87,6 @@ const categoryData = computed(() => {
 </template>
 
 <style scoped>
-/* Воссоздаем точную геометрию скоса из UIverse */
 .custom-skew-border {
   transform: skew(-35deg);
   transform-origin: top left;
