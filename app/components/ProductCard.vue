@@ -1,3 +1,59 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useCartStore } from "~/stores/useCartStore";
+const props = defineProps({
+  product: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+const favoritesStore = useFavoritesStore();
+const cartStore = useCartStore();
+
+// 1. Адаптер названия (поиск даёт .name, каталог даёт .model)
+const productTitle = computed(() => {
+  return props.product?.name || props.product?.model || "Название товара";
+});
+
+// 2. Адаптер изображения (картинка может быть в images[0].url, image или photo)
+const imageUrl = computed(() => {
+  return (
+    props.product?.images?.[0]?.url ||
+    props.product?.image ||
+    props.product?.photo ||
+    "/placeholder.png"
+  );
+});
+
+// 3. Адаптер категории (class.name или category.name)
+const categoryName = computed(() => {
+  return props.product?.category?.name || props.product?.class?.name || "Товар";
+});
+
+// 4. Магазинные данные и Цены
+const shopData = computed(() => props.product?.random_shop);
+const hasDiscount = computed(() => !!shopData.value?.discount?.price);
+
+const currentPrice = computed(() => {
+  if (hasDiscount.value) {
+    return shopData.value?.discount?.price;
+  }
+  return shopData.value?.price || null;
+});
+
+const oldPrice = computed(() => {
+  if (hasDiscount.value) {
+    return shopData.value?.price || null;
+  }
+  return null;
+});
+
+const formatPrice = (val?: number | string | null) => {
+  if (!val) return "";
+  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+</script>
 <template>
   <NuxtLink
     :to="`/productPage/${product.slug}`"
@@ -107,72 +163,47 @@
           />
         </button>
         <button
+          @click.prevent.stop="favoritesStore.toggleFavorite(product as any)"
           type="button"
-          class="w-8 h-8 flex items-center justify-center border-[1px] bg-[#fff] text-[grey] rounded-full hover:bg-[#E30909] hover:text-white transition-colors cursor-pointer"
+          :class="[
+            'w-8 h-8 flex items-center justify-center border transition-all cursor-pointer rounded-full',
+            favoritesStore.isFavorite(product.id)
+              ? 'bg-[#E30909] text-white border-[#E30909]'
+              : 'bg-[#fff] text-gray-400 border-gray-200 hover:bg-[#E30909] hover:text-white hover:border-[#E30909]',
+          ]"
         >
-          <Icon name="mdi:heart" class="text-l transition-transform" />
+          <Icon
+            :name="
+              favoritesStore.isFavorite(product.id)
+                ? 'mdi:heart'
+                : 'mdi:heart-outline'
+            "
+            class="text-lg transition-transform active:scale-125"
+          />
         </button>
         <button
+          @click.prevent.stop="cartStore.addToCart(product)"
           type="button"
-          class="w-8 h-8 flex items-center justify-center bg-[#fff] border-[1px] text-[grey] rounded-full hover:bg-[#E30909] hover:text-white transition-colors cursor-pointer"
+          :class="[
+            'w-8 h-8 flex items-center justify-center border transition-all cursor-pointer rounded-full',
+            cartStore.isInCart(product?.id)
+              ? 'bg-[#E30909] text-white border-[#E30909]'
+              : 'bg-[#fff] text-gray-400 border-gray-200 hover:bg-[#E30909] hover:text-white hover:border-[#E30909]',
+          ]"
+          :title="
+            cartStore.isInCart(product?.id) ? 'В корзине' : 'Добавить в корзину'
+          "
         >
-          <Icon name="mdi:cart" class="text-l transition-transform" />
+          <Icon
+            :name="
+              cartStore.isInCart(product?.id)
+                ? 'mdi:cart-check'
+                : 'mdi:cart-outline'
+            "
+            class="text-lg transition-transform active:scale-125"
+          />
         </button>
       </div>
     </div>
   </NuxtLink>
 </template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-
-const props = defineProps({
-  product: {
-    type: Object,
-    default: () => ({}),
-  },
-});
-
-// 1. Адаптер названия (поиск даёт .name, каталог даёт .model)
-const productTitle = computed(() => {
-  return props.product?.name || props.product?.model || "Название товара";
-});
-
-// 2. Адаптер изображения (картинка может быть в images[0].url, image или photo)
-const imageUrl = computed(() => {
-  return (
-    props.product?.images?.[0]?.url ||
-    props.product?.image ||
-    props.product?.photo ||
-    "/placeholder.png"
-  );
-});
-
-// 3. Адаптер категории (class.name или category.name)
-const categoryName = computed(() => {
-  return props.product?.category?.name || props.product?.class?.name || "Товар";
-});
-
-// 4. Магазинные данные и Цены
-const shopData = computed(() => props.product?.random_shop);
-const hasDiscount = computed(() => !!shopData.value?.discount?.price);
-
-const currentPrice = computed(() => {
-  if (hasDiscount.value) {
-    return shopData.value?.discount?.price;
-  }
-  return shopData.value?.price || null;
-});
-
-const oldPrice = computed(() => {
-  if (hasDiscount.value) {
-    return shopData.value?.price || null;
-  }
-  return null;
-});
-
-const formatPrice = (val?: number | string | null) => {
-  if (!val) return "";
-  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-};
-</script>

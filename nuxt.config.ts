@@ -20,6 +20,12 @@ export default defineNuxtConfig({
   ],
   css: ['~/assets/css/main.css'],
   app: {
+    head: {
+      title: 'Интернет-магазин компьютерной техники в Ташкенте | BRANDSTORE.UZ',
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' }
+      ]
+    },
     pageTransition: { name: 'page', mode: 'out-in' } 
-  }
+  },
 })

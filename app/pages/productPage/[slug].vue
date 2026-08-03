@@ -101,11 +101,26 @@
 
             <div class="flex items-center gap-3 text-gray-400">
               <button
-                class="hover:text-[#E30909] transition-colors p-2.5 bg-[#1A1D21] rounded-full cursor-pointer flex items-center justify-center group"
-                title="В избранное"
+                @click="favoritesStore.toggleFavorite(product as any)"
+                type="button"
+                :class="[
+                  'transition-colors p-2.5 rounded-full cursor-pointer flex items-center justify-center group',
+                  favoritesStore.isFavorite(product?.id)
+                    ? 'bg-[#E30909] text-white'
+                    : 'bg-[#1A1D21] text-gray-300 hover:text-[#E30909]',
+                ]"
+                :title="
+                  favoritesStore.isFavorite(product?.id)
+                    ? 'Убрать из избранного'
+                    : 'В избранное'
+                "
               >
                 <Icon
-                  name="mdi:heart-outline"
+                  :name="
+                    favoritesStore.isFavorite(product?.id)
+                      ? 'mdi:heart'
+                      : 'mdi:heart-outline'
+                  "
                   class="text-xl transition-transform group-hover:scale-110"
                 />
               </button>
@@ -313,6 +328,7 @@
 import { ref, computed, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { api } from "~/utils/api";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 
 const route = useRoute();
 
@@ -329,6 +345,7 @@ const {
 );
 
 const productId = computed(() => product.value?.id);
+const favoritesStore = useFavoritesStore();
 
 // Похожие товары подгружаются аналогично через lazy
 const { data: similarRes, pending: similarLoading } = useLazyAsyncData(
