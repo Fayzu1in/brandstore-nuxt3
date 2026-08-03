@@ -24,9 +24,9 @@
         >
           <span class="text-sm text-gray-400">Товары в заказе</span>
           <button
-            @click="cartStore.clearCart()"
+            @click="askClearCart"
             type="button"
-            class="text-sm text-gray-400 hover:text-[#E30909] transition-colors"
+            class="text-sm text-gray-400 hover:text-[#E30909] transition-colors cursor-pointer"
           >
             Очистить корзину
           </button>
@@ -262,6 +262,13 @@
         Перейти к покупкам
       </NuxtLink>
     </div>
+    <ConfirmModal
+      :is-open="isConfirmOpen"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      @confirm="handleConfirm"
+      @cancel="isConfirmOpen = false"
+    />
   </div>
 </template>
 
@@ -269,6 +276,33 @@
 import { ref } from "vue";
 import { useCartStore } from "~/stores/useCartStore";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+// модалка
+const isConfirmOpen = ref(false);
+const confirmTitle = ref("");
+const confirmMessage = ref("");
+const confirmAction = ref<(() => void) | null>(null);
+// Вызов окна для очистки ВСЕЙ корзины
+const askClearCart = () => {
+  confirmTitle.value = "Очистить корзину?";
+  confirmMessage.value = "Все товары будут удалены из вашей корзины.";
+  confirmAction.value = () => cartStore.clearCart();
+  isConfirmOpen.value = true;
+};
+// Вызов окна для удаления ОДНОГО товара
+const askRemoveItem = (productId: number, productName: string) => {
+  confirmTitle.value = "Удалить товар?";
+  confirmMessage.value = `Вы уверены, что хотите удалить "${productName}" из корзины?`;
+  confirmAction.value = () => cartStore.removeFromCart(productId);
+  isConfirmOpen.value = true;
+};
+
+// Подтверждение действия
+const handleConfirm = () => {
+  if (confirmAction.value) {
+    confirmAction.value();
+  }
+  isConfirmOpen.value = false;
+};
 
 const cartStore = useCartStore();
 const favoritesStore = useFavoritesStore();
