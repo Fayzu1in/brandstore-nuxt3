@@ -28,7 +28,7 @@
           class="relative w-full h-full overflow-hidden"
         >
           <img
-            :src="slide.background?.url"
+            src="https://cdn2.technopark.ru/technopark/photos_resized/banner_v2_size_4000_1045/4000_1045/843854/1_843854.jpg?timestamp=2026-09-01_15-38-17"
             :alt="slide.title"
             class="absolute inset-0 w-full h-full object-cover object-center"
           />

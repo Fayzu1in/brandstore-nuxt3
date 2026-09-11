@@ -256,7 +256,17 @@
 
           <!-- Кнопки действия -->
           <div class="flex flex-col sm:flex-row gap-3 mb-4">
+            <NuxtLink
+              v-if="cartStore.isInCart(product?.id)"
+              to="/cart"
+              class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3.5 px-6 rounded-xl transition-colors text-center block"
+            >
+              Перейти в корзину
+            </NuxtLink>
+
             <button
+              v-else
+              @click.prevent.stop="cartStore.addToCart(product)"
               class="flex-1 bg-[#E30909] hover:bg-[#c20808] text-white font-medium py-3.5 px-6 rounded-xl transition-colors text-center cursor-pointer"
             >
               Добавить в корзину
@@ -329,8 +339,10 @@ import { ref, computed, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { api } from "~/utils/api";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useCartStore } from "~/stores/useCartStore";
 
 const route = useRoute();
+const cartStore = useCartStore();
 
 const {
   data: product,

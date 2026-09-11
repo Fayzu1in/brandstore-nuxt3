@@ -50,20 +50,20 @@ const subcategories = computed(() => {
 
           <!-- <div
             class="relative z-20 flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-black/30 backdrop-blur-md border border-white/10 group-hover:scale-110 group-hover:border-[#E30909] transition-all duration-300 overflow-hidden"
-          >
-            <img
-              v-if="sub.image"
-              :src="sub.wicon"
+          > -->
+          <!-- <img
+              v-if="sub.preview"
+              :src="sub.preview"
               :alt="sub.name"
               class="w-full h-full object-cover p-2"
-            />
+            /> -->
 
-            <Icon
+          <!-- <Icon
               v-else
               name="mdi:shape-outline"
               class="w-6 h-6 sm:w-9 sm:h-9 text-white group-hover:text-[#E30909] transition-colors duration-300"
-            />
-          </div> -->
+            /> -->
+          <!-- </div> -->
         </div>
 
         <div class="bottom-section py-2.5 sm:py-4 px-1 sm:px-2 text-center">

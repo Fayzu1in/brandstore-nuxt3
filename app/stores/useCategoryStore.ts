@@ -13,6 +13,7 @@ export interface Category {
   name: string
   icon: string
   wicon: string
+  preview: string
 }
 
 export const useCategoryStore = defineStore('category', () => {

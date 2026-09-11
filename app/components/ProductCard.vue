@@ -63,10 +63,10 @@ const formatPrice = (val?: number | string | null) => {
       <!-- Плашка скидки -->
       <div
         v-if="hasDiscount"
-        class="absolute top-3 left-3 z-10 inline-flex items-center gap-1 bg-red-500/10 border border-red-500/20 text-[#E30909] text-[11px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-sm"
+        class="absolute top-3 left-3 z-10 inline-flex items-center gap-1 bg-red-500/40 border border-red-500/20 text-[#E30909] text-[11px] font-semibold px-2 py-0.5 rounded-md backdrop-blur-sm"
       >
         <Icon name="mdi:tag-outline" class="text-xs" />
-        <span>Скидка</span>
+        <span>{{ shopData?.discount?.percent }}%</span>
       </div>
 
       <!-- Новинка -->

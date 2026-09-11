@@ -50,7 +50,7 @@
           <button
             @click="$emit('toggle-menu')"
             type="button"
-            class="flex items-center gap-2 bg-[#E30909] text-white px-3 sm:px-5 py-2 rounded-xl font-medium text-[13px] sm:text-[15px] hover:bg-[#b80707] transition-all duration-200 cursor-pointer h-[32px] sm:h-[36px] flex-shrink-0"
+            class="flex items-center gap-2 bg-[#E30909] text-white px-3 sm:px-5 py-2 rounded-full font-medium text-[13px] sm:text-[15px] hover:bg-[#b80707] transition-all duration-200 cursor-pointer h-[32px] sm:h-[36px] flex-shrink-0"
           >
             <Icon
               :name="isMenuOpen ? 'mdi:close' : 'mdi:menu'"
@@ -73,7 +73,7 @@
             <button
               v-if="searchQuery"
               type="button"
-              class="text-gray-400 hover:text-black transition-colors"
+              class="text-gray-400 hover:text-black transition-colors mt-[8px]"
               @click="clearSearch"
             >
               <Icon name="mdi:close" class="text-lg" />
